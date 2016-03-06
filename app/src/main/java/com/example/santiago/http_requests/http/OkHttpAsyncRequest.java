@@ -14,8 +14,6 @@ import java.io.IOException;
  *  los metodos getRequest() y onRequestCompleted(). getRequest() debe devolver 
  *  una referencia no nula de un objecto Request, de lo contrario onRequestCompleted()
  *  se llamará con un NullPointerException.
- * 
- * @author percha
  *
  */
 public abstract class OkHttpAsyncRequest {

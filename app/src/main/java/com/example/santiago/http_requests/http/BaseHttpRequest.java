@@ -3,28 +3,23 @@ package com.example.santiago.http_requests.http;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import java.io.IOException;
-
-import okio.Buffer;
-
-public abstract class AmalgamaHttpRequest<E> extends OkHttpAsyncParsedRequest<E> {
+public abstract class BaseHttpRequest<E> extends OkHttpAsyncParsedRequest<E> {
 	
 	private Context context = null;
 	
 	private HttpRequestSuccessListener<E> successListener = null;
     private HttpRequestFailureListener<E> failureListener = null;
 	
-	public AmalgamaHttpRequest(Context context) {
+	public BaseHttpRequest(Context context) {
 		
 		if(context == null)
-			throw new NullPointerException("Context cannot be null in AmalgamaHttpRequest");
+			throw new NullPointerException("Context cannot be null in BaseHttpRequest");
 		
 		this.context = context;
 		
@@ -84,22 +79,6 @@ public abstract class AmalgamaHttpRequest<E> extends OkHttpAsyncParsedRequest<E>
 			requestBuilder.method(method, body);
 
 			result = requestBuilder.build();
-
-			//TODO borrar
-			Log.w("url", getRequestUrl());
-			Log.w("method", method);
-			if(headers!=null){
-				Log.w("header", headers.toString());
-			} else {
-				Log.w("header","null");
-			}
-			if(body!=null){
-				Log.w("body", bodyToString(result));
-			} else {
-				Log.w("body","null");
-			}
-			//TODO borrar
-
 			
 		} catch (IllegalArgumentException exception){
 			
@@ -153,23 +132,11 @@ public abstract class AmalgamaHttpRequest<E> extends OkHttpAsyncParsedRequest<E>
 	}
 
     public interface HttpRequestSuccessListener<E> {
-        public void onHttpRequestSuccess(AmalgamaHttpRequest<E> request, E result);
+        public void onHttpRequestSuccess(BaseHttpRequest<E> request, E result);
     }
 
     public interface HttpRequestFailureListener<E> {
-        public void onHttpRequestFailure(AmalgamaHttpRequest<E> request, Response httpResponse, Exception exception);
+        public void onHttpRequestFailure(BaseHttpRequest<E> request, Response httpResponse, Exception exception);
     }
-
-	private String bodyToString(final Request request){
-
-		try {
-			final Request copy = request.newBuilder().build();
-			final Buffer buffer = new Buffer();
-			copy.body().writeTo(buffer);
-			return buffer.readUtf8();
-		} catch (final IOException e) {
-			return "did not work";
-		}
-	}
 	
 }

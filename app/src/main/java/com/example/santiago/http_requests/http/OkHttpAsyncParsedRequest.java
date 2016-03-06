@@ -15,8 +15,6 @@ import java.io.IOException;
  *  una referencia no nula de un objecto Request, de lo contrario onRequestCompleted()
  *  se llamará con un NullPointerException. parseResponse() debe devolver el objeto parseado o null 
  *  si hubo un error de parseo. Tanto getRequest() como parseResponse() se ejecutan en el AsyncTask.
- * 
- * @author percha
  *
  */
 public abstract class OkHttpAsyncParsedRequest<E> {
