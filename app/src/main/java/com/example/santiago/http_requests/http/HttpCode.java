@@ -84,6 +84,5 @@ public abstract class HttpCode {
 	public static final int NETWORK_AUTHENTICATION_REQUIRED = 511;
 	public static final int NETWORK_READ_TIMEOUT_ERROR = 598;
 	public static final int NETWORK_CONNECT_TIMEOUT_ERROR = 599;
-	
-	
+
 }

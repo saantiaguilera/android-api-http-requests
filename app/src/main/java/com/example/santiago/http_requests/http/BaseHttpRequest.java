@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
@@ -60,7 +61,7 @@ public abstract class BaseHttpRequest<E> extends OkHttpAsyncParsedRequest<E> {
 	@Override
 	protected Request getRequest() {
 		
-		Request result = null;
+		Request result;
 		
 		try {
 
@@ -74,7 +75,13 @@ public abstract class BaseHttpRequest<E> extends OkHttpAsyncParsedRequest<E> {
 				requestBuilder.headers(headers);
 
 			RequestBody body = getRequestBody();
+
 			String method =getHttpMethod();
+
+			//Workaround for issue of Null body excep: (@see: https://github.com/square/retrofit/issues/854
+			if(body==null && com.squareup.okhttp.internal.http.HttpMethod.requiresRequestBody(method))
+				body = RequestBody.create(null, new byte[0]);
+
 
 			requestBuilder.method(method, body);
 
@@ -91,7 +98,7 @@ public abstract class BaseHttpRequest<E> extends OkHttpAsyncParsedRequest<E> {
 	}
 	
 	@Override
-	protected void onRequestCompleted(Response httpResponse, E parsedResponse, Exception exception) {
+	protected void onRequestCompleted(HttpResponse httpResponse, E parsedResponse, Exception exception) {
 		
 		if(exception == null) {
 			
@@ -116,7 +123,7 @@ public abstract class BaseHttpRequest<E> extends OkHttpAsyncParsedRequest<E> {
 	protected Headers getRequestHeaders() {
 		return null;
 	}
-	
+
 	protected void callSuccessListener(E parsedResponse){
 		
 		if(successListener != null)
@@ -124,7 +131,7 @@ public abstract class BaseHttpRequest<E> extends OkHttpAsyncParsedRequest<E> {
 		
 	}
 	
-	protected void callFailureListener(Response httpResponse, Exception exception){
+	protected void callFailureListener(HttpResponse httpResponse, Exception exception){
 		
 		if(failureListener != null)
 			failureListener.onHttpRequestFailure(this, httpResponse, exception);
@@ -132,11 +139,11 @@ public abstract class BaseHttpRequest<E> extends OkHttpAsyncParsedRequest<E> {
 	}
 
     public interface HttpRequestSuccessListener<E> {
-        public void onHttpRequestSuccess(BaseHttpRequest<E> request, E result);
+        void onHttpRequestSuccess(BaseHttpRequest<E> request, E result);
     }
 
     public interface HttpRequestFailureListener<E> {
-        public void onHttpRequestFailure(BaseHttpRequest<E> request, Response httpResponse, Exception exception);
+        void onHttpRequestFailure(BaseHttpRequest<E> request, HttpResponse httpResponse, Exception exception);
     }
 	
 }
