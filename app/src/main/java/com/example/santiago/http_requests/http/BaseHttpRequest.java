@@ -98,7 +98,7 @@ public abstract class BaseHttpRequest<E> extends OkHttpAsyncParsedRequest<E> {
 	}
 	
 	@Override
-	protected void onRequestCompleted(HttpResponse httpResponse, E parsedResponse, Exception exception) {
+	protected void onRequestCompleted(Response httpResponse, E parsedResponse, Exception exception) {
 		
 		if(exception == null) {
 			
@@ -115,7 +115,12 @@ public abstract class BaseHttpRequest<E> extends OkHttpAsyncParsedRequest<E> {
 	protected abstract String getRequestUrl();
 	
 	protected abstract String getHttpMethod();
-	
+
+	@Override
+	protected Authenticator getAuthenticator() {
+		return null;
+	}
+
 	protected RequestBody getRequestBody() {
 		return null;
 	}
@@ -131,7 +136,7 @@ public abstract class BaseHttpRequest<E> extends OkHttpAsyncParsedRequest<E> {
 		
 	}
 	
-	protected void callFailureListener(HttpResponse httpResponse, Exception exception){
+	protected void callFailureListener(Response httpResponse, Exception exception){
 		
 		if(failureListener != null)
 			failureListener.onHttpRequestFailure(this, httpResponse, exception);
@@ -143,7 +148,7 @@ public abstract class BaseHttpRequest<E> extends OkHttpAsyncParsedRequest<E> {
     }
 
     public interface HttpRequestFailureListener<E> {
-        void onHttpRequestFailure(BaseHttpRequest<E> request, HttpResponse httpResponse, Exception exception);
+        void onHttpRequestFailure(BaseHttpRequest<E> request, Response httpResponse, Exception exception);
     }
 	
 }

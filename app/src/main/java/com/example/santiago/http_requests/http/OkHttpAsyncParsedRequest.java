@@ -92,7 +92,7 @@ public abstract class OkHttpAsyncParsedRequest<E> {
 	 * @throws IOException
 	 * @throws NumberFormatException
 	 */
-	abstract protected E parseResponse(HttpResponse response) throws HttpParseException;
+	abstract protected E parseResponse(Response response) throws HttpParseException;
 	
 	/**
 	 * Metodo a sobreescribir. Se devuelve el Response resultante del pedido y la 
@@ -102,7 +102,7 @@ public abstract class OkHttpAsyncParsedRequest<E> {
 	 * @param parsedResponse resultado del pedido ya parseado, nulo si hubo un error de parseo
 	 * @param exception excepcion que haya detenido el pedido, nulo en caso de no haberse detenido
 	 */
-	abstract protected void onRequestCompleted(HttpResponse httpResponse, E parsedResponse, Exception exception);
+	abstract protected void onRequestCompleted(Response httpResponse, E parsedResponse, Exception exception);
 	
 	private class OkHttpRequestTask  extends AsyncTask<Void, Void, OkHttpRequestTaskResponse > {
 		
@@ -121,10 +121,8 @@ public abstract class OkHttpAsyncParsedRequest<E> {
 
 					if(authenticator!=null)
 						httpClient.setAuthenticator(authenticator);
-
-					Response response = httpClient.newCall(request).execute();
 					
-					result.httpResponse = new HttpResponse(response);
+					result.httpResponse = httpClient.newCall(request).execute();
 					result.exception = null;
 					
 					result.parsedReponse = parseResponse(result.httpResponse);
@@ -162,7 +160,7 @@ public abstract class OkHttpAsyncParsedRequest<E> {
 	
 	private class OkHttpRequestTaskResponse {
 		
-		public HttpResponse httpResponse = null;
+		public Response httpResponse = null;
 		public Exception exception = null;
 		public E parsedReponse = null;
 		
