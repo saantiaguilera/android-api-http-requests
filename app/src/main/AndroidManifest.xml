@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service android:enabled="true" android:name="com.example.santiago.http.service.HttpService" />
+        <service android:enabled="true" android:name="com.example.santiago.http.http.HttpService" />
 
         <activity android:name="com.example.santiago.testings.activity.MActivity" >
             <intent-filter>

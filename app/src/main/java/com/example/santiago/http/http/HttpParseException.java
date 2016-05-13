@@ -1,4 +1,4 @@
-package com.example.santiago.http.basic;
+package com.example.santiago.http.http;
 
 /**
  * Class for parsing exceptions, nothing new.

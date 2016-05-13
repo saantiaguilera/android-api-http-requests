@@ -17,4 +17,5 @@ public abstract class Event {
 
         return super.hashCode();
     }
+
 }

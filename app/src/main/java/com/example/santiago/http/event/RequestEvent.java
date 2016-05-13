@@ -6,7 +6,7 @@ import android.support.annotation.RequiresPermission;
 
 import com.example.santiago.event.Event;
 import com.example.santiago.event.listener.EventListener;
-import com.example.santiago.http.basic.HttpParseException;
+import com.example.santiago.http.http.HttpParseException;
 
 import java.io.IOException;
 

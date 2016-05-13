@@ -3,7 +3,7 @@ package com.example.santiago.testings.event;
 import android.support.annotation.NonNull;
 
 import com.example.santiago.event.listener.EventListener;
-import com.example.santiago.http.basic.HttpParseException;
+import com.example.santiago.http.http.HttpParseException;
 import com.example.santiago.http.event.RequestEvent;
 
 import java.io.IOException;

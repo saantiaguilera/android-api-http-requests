@@ -1,4 +1,4 @@
-package com.example.santiago.http.basic;
+package com.example.santiago.http.http;
 
 /**
  * All the codes that HTTP can have.

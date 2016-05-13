@@ -14,6 +14,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * TODO Beware that the timeval also affects network calls (because they are idle) so put something that shouldnt affect their own timeout ?
+ *
  * @note In case you are planning on using multiple EventManagers, there will be only
  * one handler and pool executor for all of them.
  *
@@ -36,8 +38,8 @@ public class EventDispatcher {
             poolExecutor = new ThreadPoolExecutor(
                     Runtime.getRuntime().availableProcessors() * 2,
                     Runtime.getRuntime().availableProcessors() * 2,
-                    5L, //Since this should be just work from the event, (you cant send messages here), once its idle its done. So this value has to be low
-                    TimeUnit.SECONDS,
+                    1L,
+                    TimeUnit.MINUTES,
                     new LinkedBlockingQueue<Runnable>()
             );
         }

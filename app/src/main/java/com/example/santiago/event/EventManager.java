@@ -5,7 +5,6 @@ import android.content.ContextWrapper;
 import android.support.annotation.NonNull;
 
 import com.example.santiago.event.listener.EventListener;
-import com.example.santiago.http.event.RequestManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class EventManager implements EventListener {
 
     private final List<Object> observables = new ArrayList<>(); //List of all the objects willing to receive events
 
-    public EventManager(@NonNull ContextWrapper context, Object tag){
+    public EventManager(@NonNull ContextWrapper context, @NonNull Object tag){
         this.context = new WeakReference<>(context);
         this.tag = new WeakReference<>(tag);
 
