@@ -1,4 +1,4 @@
-package com.example.santiago.http_requests.http;
+package com.example.santiago.http.basic;
 
 public abstract class HttpCode {
 	

@@ -1,12 +1,6 @@
-package com.example.santiago.http_requests.http;
+package com.example.santiago.http.basic;
 
 public class HttpParseException extends Exception {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5059274241411209996L;
-	
 	
 	public HttpParseException() {}
 	
