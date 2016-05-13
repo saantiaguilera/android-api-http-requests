@@ -35,13 +35,13 @@ public class HttpService extends Service {
     }
 
     public void attach(EventManager eventManager) {
-        dispatchers.put(eventManager.hashCode(), eventManager);
+        dispatchers.put(eventManager.getTag().hashCode(), eventManager);
 
         eventManager.addObservable(this);
     }
 
     public void remove(EventManager eventManager) {
-        dispatchers.remove(eventManager.hashCode());
+        dispatchers.remove(eventManager.getTag().hashCode());
 
         eventManager.removeObservable(this);
     }
@@ -49,7 +49,7 @@ public class HttpService extends Service {
     @EventAsync
     @EventMethod(RequestEvent.class)
     private void onRequestEvent(RequestEvent event) {
-        EventManager dispatcher = dispatchers.get(event.parentHashCode());
+        EventManager dispatcher = dispatchers.get(event.getParentHashCode());
 
         if (dispatcher != null)
             event.execute(dispatcher);

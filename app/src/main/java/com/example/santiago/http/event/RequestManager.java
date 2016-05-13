@@ -58,6 +58,8 @@ public class RequestManager {
             for (EventManager em : allTimeEMs)
                 if (em != null) httpService.remove(em);
 
+            allTimeEMs.clear();
+
             context.get().unbindService(mConnection);
             bound = false;
         }

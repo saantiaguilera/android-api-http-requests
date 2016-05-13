@@ -40,7 +40,7 @@ public class MActivity extends Activity {
         getButton = (TextView) findViewById(R.id.activity_m_get_request);
 
         requestManager = RequestManager.with(this);
-        eventManager = new EventManager(this);
+        eventManager = new EventManager(this, this);
         eventManager.addObservable(this);
 
         requestManager.addEventManager(eventManager);

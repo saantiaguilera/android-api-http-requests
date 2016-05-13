@@ -6,6 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Simple anotation for knowing if the method to invoke should be done Async
+ *
  * Created by santiago on 20/04/16.
  */
 @Retention(RetentionPolicy.RUNTIME)

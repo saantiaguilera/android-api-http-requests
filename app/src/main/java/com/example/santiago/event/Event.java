@@ -11,7 +11,7 @@ public abstract class Event {
         this.parentHash = parentHash;
     }
 
-    public int parentHashCode() {
+    public int getParentHashCode() {
         if (parentHash != -1)
             return parentHash;
 
