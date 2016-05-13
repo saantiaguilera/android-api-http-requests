@@ -5,9 +5,20 @@ Wrapper of OkHttp3 to make Network Calls from a Service (+ bg threads)
 
 Uses Events (https://github.com/saantiaguilera/android-api-controllers-and-events)
 
-Usage:
 --------------------------------------------------------------------------------
--------------------------------------Set up-------------------------------------
+TODO
+--------------------------------------------------------------------------------
+
+- Add tag to RequestEvent and make them cancelables via tags.
+
+
+
+--------------------------------------------------------------------------------
+Usage
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Set up
 --------------------------------------------------------------------------------
 
 In an Activity (or something that you plan on binding with the service to make the network calls)
@@ -44,7 +55,7 @@ So for each EventManager that will be able to "handle network connections" add i
 ```
 
 --------------------------------------------------------------------------------
--------------------------------Creating a Request-------------------------------
+Creating a Request
 --------------------------------------------------------------------------------
 
 Simply create a Event class that subclassifies the RequestEvent class
