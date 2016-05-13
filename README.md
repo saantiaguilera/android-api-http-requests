@@ -102,3 +102,14 @@ public class GetRequestEvent extends RequestEvent<String> {
 
 }
 ```
+
+
+--------------------------------------------------------------------------------
+Executing
+--------------------------------------------------------------------------------
+
+Just do 
+```Java
+//Somewhere in a method...
+eventManager.dispatchEvent(new GetRequestEvent());
+```
