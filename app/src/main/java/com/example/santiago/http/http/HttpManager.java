@@ -7,10 +7,10 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 
 import com.example.santiago.event.EventManager;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,19 +34,19 @@ public class HttpManager {
     private static HttpManager instance;
 
     //Service and a flag for knowing if we are bound or not
-    private HttpService httpService;
+    private @NonNull HttpService httpService;
     private boolean bound = false;
 
     //Lists to handle the eventmanagers that are currently listening
-    private List<EventManager> allTimeEMs = new ArrayList<>();
-    private Queue<EventManager> emQueue = new ArrayDeque<>();
+    private @NonNull List<EventManager> allTimeEMs = new ArrayList<>();
+    private @NonNull Queue<EventManager> emQueue = new ArrayDeque<>();
 
     /**
      * Getter for the HttpManager singleton.
      *
      * @return HttpManager singleton
      */
-    public static HttpManager getInstance() {
+    public static @NonNull HttpManager getInstance() {
         if (instance == null)
             instance = new HttpManager();
 
@@ -58,7 +58,7 @@ public class HttpManager {
      * @param context
      * @return boolean
      */
-    private boolean isServiceRunning(ContextWrapper context) {
+    private boolean isServiceRunning(@NonNull ContextWrapper context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
@@ -76,7 +76,7 @@ public class HttpManager {
      * Will bind to the server so he starts listening to us.
      * If you dont call this, it wont work :)
      */
-    public void onStart(ContextWrapper contextWrapper) {
+    public void onStart(@NonNull ContextWrapper contextWrapper) {
         Intent intent = new Intent(contextWrapper, HttpService.class);
 
         if (!isServiceRunning(contextWrapper))
@@ -93,7 +93,7 @@ public class HttpManager {
      * Will unbind from the service and remove all our eventmanagers so leaks are less
      * probables (although activities and stuff are all weakreferenced, but still)
      */
-    public void onStop(ContextWrapper contextWrapper) {
+    public void onStop(@NonNull ContextWrapper contextWrapper) {
         if (bound) {
             for (EventManager em : allTimeEMs)
                 if (em != null) httpService.remove(em);
@@ -109,7 +109,7 @@ public class HttpManager {
      * Add the eventmanager to the service
      * @param eventManager
      */
-    public void addEventManager(EventManager eventManager) {
+    public void addEventManager(@NonNull EventManager eventManager) {
         if (bound) {
             httpService.add(eventManager);
             allTimeEMs.add(eventManager);
@@ -120,14 +120,14 @@ public class HttpManager {
      * Remove the EventManager from the service
      * @param eventManager
      */
-    public void removeEventManager(EventManager eventManager) {
+    public void removeEventManager(@NonNull EventManager eventManager) {
         if (bound) {
             httpService.remove(eventManager);
             allTimeEMs.remove(eventManager);
         } else emQueue.remove(eventManager);
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private @NonNull ServiceConnection mConnection = new ServiceConnection() {
 
         /**
          * Get the service instance and add all our eventManager that tried to

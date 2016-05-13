@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.example.santiago.event.EventManager;
@@ -24,10 +25,10 @@ import java.util.Map;
 public class HttpService extends Service {
 
     //Map were we store all the possible dispatchers
-    private Map<Integer, EventManager> dispatchers = new HashMap<>();
+    private @NonNull Map<Integer, EventManager> dispatchers = new HashMap<>();
 
     //IBinder instance so that binders can use us
-    private final IBinder serviceBinder = new HttpBinder();
+    private final @NonNull IBinder serviceBinder = new HttpBinder();
 
     /**
      * Using START_STICKY because we want it to live forever
@@ -65,7 +66,7 @@ public class HttpService extends Service {
      *
      * @param eventManager
      */
-    public void add(EventManager eventManager) {
+    public void add(@NonNull EventManager eventManager) {
         dispatchers.put(eventManager.getTag().hashCode(), eventManager);
 
         eventManager.addObservable(this);
@@ -81,7 +82,7 @@ public class HttpService extends Service {
      *
      * @param eventManager
      */
-    public void remove(EventManager eventManager) {
+    public void remove(@NonNull EventManager eventManager) {
         dispatchers.remove(eventManager.getTag().hashCode());
 
         eventManager.removeObservable(this);
@@ -97,7 +98,7 @@ public class HttpService extends Service {
      */
     @EventAsync
     @EventMethod(RequestEvent.class)
-    private void onRequestEvent(RequestEvent event) {
+    private void onRequestEvent(@NonNull RequestEvent event) {
         EventManager dispatcher = dispatchers.get(event.getParentHashCode());
 
         if (dispatcher != null)
@@ -109,7 +110,7 @@ public class HttpService extends Service {
      */
     public class HttpBinder extends Binder {
 
-        public HttpService getService() {
+        public @NonNull HttpService getService() {
             return HttpService.this;
         }
 
