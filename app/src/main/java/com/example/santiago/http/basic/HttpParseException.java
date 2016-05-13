@@ -1,5 +1,9 @@
 package com.example.santiago.http.basic;
 
+/**
+ * Class for parsing exceptions, nothing new.
+ * Is it necessary ?
+ */
 public class HttpParseException extends Exception {
 	
 	public HttpParseException() {}

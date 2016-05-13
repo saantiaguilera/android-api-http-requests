@@ -1,5 +1,8 @@
 package com.example.santiago.http.basic;
 
+/**
+ * All the codes that HTTP can have.
+ */
 public abstract class HttpCode {
 	
 	public static final int CONTINUE = 100;
