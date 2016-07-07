@@ -1,5 +1,7 @@
 package com.example.santiago.http.event;
 
+import android.support.annotation.NonNull;
+
 import com.example.santiago.event.Event;
 
 import okhttp3.CookieJar;
@@ -9,12 +11,13 @@ import okhttp3.CookieJar;
  */
 public class HttpCookieEvent extends Event {
 
-    private CookieJar cookies;
+    private @NonNull
+    CookieJar cookies;
 
-    public HttpCookieEvent(CookieJar cookies) {
+    public HttpCookieEvent(@NonNull CookieJar cookies) {
         this.cookies = cookies;
     }
 
-    public CookieJar getCookies() { return cookies; }
+    public @NonNull CookieJar getCookies() { return cookies; }
 
 }

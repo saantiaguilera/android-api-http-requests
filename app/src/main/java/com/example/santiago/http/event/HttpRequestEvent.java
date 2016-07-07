@@ -21,14 +21,31 @@ import okhttp3.Response;
  */
 public abstract class HttpRequestEvent<E> extends Event {
 
+    /**
+     * Endpoint of the REST request
+     * @return endpoint of the request
+     */
     public abstract @NonNull String getUrl();
 
+    /**
+     * REST HttpMethod
+     * @return method
+     */
     public abstract @NonNull HttpMethod getHttpMethod();
 
+    /**
+     * Body for the request. If the method needs them you MUST override it else it will crash
+     * @return RequestBody with the params or empty one if none
+     */
     public @Nullable RequestBody getBody() {
         return null;
     }
 
+    /**
+     * Headers for the request. Bear in mind that you should not include the sticky ones
+     * if the service has.
+     * @return headers
+     */
     public @Nullable Headers getHeaders() {
         return null;
     };

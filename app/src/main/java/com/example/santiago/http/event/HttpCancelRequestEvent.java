@@ -1,5 +1,7 @@
 package com.example.santiago.http.event;
 
+import android.support.annotation.NonNull;
+
 import com.example.santiago.event.Event;
 
 /**
@@ -7,13 +9,13 @@ import com.example.santiago.event.Event;
  */
 public class HttpCancelRequestEvent extends Event {
 
-    private HttpRequestEvent event;
+    private @NonNull HttpRequestEvent event;
 
-    public HttpCancelRequestEvent(HttpRequestEvent cancelEvent) {
+    public HttpCancelRequestEvent(@NonNull HttpRequestEvent cancelEvent) {
         event = cancelEvent;
     }
 
-    public HttpRequestEvent getCancelEvent() {
+    public @NonNull HttpRequestEvent getCancelEvent() {
         return event;
     }
 

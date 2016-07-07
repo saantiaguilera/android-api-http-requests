@@ -1,5 +1,7 @@
 package com.example.santiago.http.event;
 
+import android.support.annotation.NonNull;
+
 import com.example.santiago.event.Event;
 
 import okhttp3.Authenticator;
@@ -9,12 +11,13 @@ import okhttp3.Authenticator;
  */
 public class HttpAuthenticatorEvent extends Event {
 
-    private Authenticator authenticator;
+    private @NonNull
+    Authenticator authenticator;
 
-    public HttpAuthenticatorEvent(Authenticator authenticator) {
+    public HttpAuthenticatorEvent(@NonNull Authenticator authenticator) {
         this.authenticator = authenticator;
     }
 
-    public Authenticator getAuthenticator() { return authenticator; }
+    public @NonNull Authenticator getAuthenticator() { return authenticator; }
 
 }

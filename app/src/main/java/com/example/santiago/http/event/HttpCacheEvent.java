@@ -1,5 +1,7 @@
 package com.example.santiago.http.event;
 
+import android.support.annotation.NonNull;
+
 import com.example.santiago.event.Event;
 
 import okhttp3.Cache;
@@ -9,12 +11,12 @@ import okhttp3.Cache;
  */
 public class HttpCacheEvent extends Event {
 
-    private Cache cache;
+    private @NonNull Cache cache;
 
-    public HttpCacheEvent(Cache cache) {
+    public HttpCacheEvent(@NonNull Cache cache) {
         this.cache = cache;
     }
 
-    public Cache getCache() { return cache; }
+    public @NonNull Cache getCache() { return cache; }
 
 }

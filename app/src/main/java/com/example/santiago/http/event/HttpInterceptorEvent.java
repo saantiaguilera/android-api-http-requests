@@ -1,5 +1,7 @@
 package com.example.santiago.http.event;
 
+import android.support.annotation.NonNull;
+
 import com.example.santiago.event.Event;
 
 import okhttp3.Interceptor;
@@ -10,19 +12,20 @@ import okhttp3.Interceptor;
 public class HttpInterceptorEvent extends Event {
 
     private boolean isNetwork = false;
-    private Interceptor interceptor;
+    private @NonNull
+    Interceptor interceptor;
 
-    public HttpInterceptorEvent(Interceptor interceptor) {
+    public HttpInterceptorEvent(@NonNull Interceptor interceptor) {
         this.interceptor = interceptor;
     }
 
-    public HttpInterceptorEvent(Interceptor interceptor, boolean isFromNetwork) {
+    public HttpInterceptorEvent(@NonNull Interceptor interceptor, boolean isFromNetwork) {
         this.isNetwork = isFromNetwork;
         this.interceptor = interceptor;
     }
 
     public boolean isNetwork() { return isNetwork; }
 
-    public Interceptor getInterceptor() { return interceptor; }
+    public @NonNull Interceptor getInterceptor() { return interceptor; }
 
 }

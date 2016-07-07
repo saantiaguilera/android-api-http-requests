@@ -14,8 +14,8 @@ import java.util.Map;
  */
 public class HttpStickyHeadersEvent extends Event {
 
-    private List<String> removed;
-    private Map<String, String> added;
+    private @NonNull List<String> removed;
+    private @NonNull Map<String, String> added;
 
     public HttpStickyHeadersEvent() {
         removed = new ArrayList<>();

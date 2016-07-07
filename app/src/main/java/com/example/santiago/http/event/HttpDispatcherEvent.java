@@ -1,5 +1,7 @@
 package com.example.santiago.http.event;
 
+import android.support.annotation.NonNull;
+
 import com.example.santiago.event.Event;
 
 import okhttp3.Dispatcher;
@@ -9,12 +11,13 @@ import okhttp3.Dispatcher;
  */
 public class HttpDispatcherEvent extends Event {
 
-    private Dispatcher dispatcher;
+    private @NonNull
+    Dispatcher dispatcher;
 
-    public HttpDispatcherEvent(Dispatcher dispatcher) {
+    public HttpDispatcherEvent(@NonNull Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
     }
 
-    public Dispatcher getDispatcher() { return dispatcher; }
+    public @NonNull Dispatcher getDispatcher() { return dispatcher; }
 
 }

@@ -20,23 +20,30 @@ import java.util.List;
  * Created by santiaguilera@theamalgama.com on 01/03/16.
  */
 public class EventBus {
-
+    //Context asociated with this bus
     private WeakReference<ContextWrapper> context = null;
-
-    private EventDispatcher dispatcher; //Dude in charge of dispatching events
-
+    //Dude in charge of dispatching events
+    private EventDispatcher dispatcher;
+    //Singleton for the http bus
     private static EventBus httpBus;
-
-    private final List<WeakReference<Object>> observables = new ArrayList<>(); //List of all the objects willing to receive events
+    //List of all the objects willing to receive events
+    private final List<WeakReference<Object>> observables = new ArrayList<>();
+    //List of all the events that are sticky (are sent to even new observables)
     private final List<Event> stickyEvents = new ArrayList<>();
 
     /**
      * This shouldnt be called by anyone except us on the start of the app
+     * Ideally try to call it in the application onCreate. So the context is the applicationContext :)
+     *
      * @param context
      * @return bus
      */
     public static EventBus _initHttpBus(@NonNull ContextWrapper context) {
-        httpBus = new EventBus(context);
+        if (httpBus == null) {
+            synchronized (EventBus.class) {
+                if (httpBus == null) httpBus = new EventBus(context);
+            }
+        }
 
         Intent serviceIntent = new Intent(context, HttpService.class);
         context.startService(serviceIntent);
@@ -44,6 +51,10 @@ public class EventBus {
         return httpBus;
     }
 
+    /**
+     * Getter for the Http bus. Its a singleton so all responses and requests are done over this the same bus
+     * @return http bus
+     */
     public static EventBus getHttpBus() {
         if (httpBus == null)
             throw new IllegalStateException("Trying to get HttpBus without init. Be sure you are calling initHttpBus first. A good practice would be in a Application or a ContentProvider :)");
@@ -51,12 +62,20 @@ public class EventBus {
         return httpBus;
     }
 
+    /**
+     * Constructor for an event bus.
+     * @param context
+     */
     public EventBus(@NonNull ContextWrapper context){
         this.context = new WeakReference<>(context);
 
         dispatcher = new EventDispatcher();
     }
 
+    /**
+     * Getter for the context asociated with the event bus
+     * @return context
+     */
     public @NonNull Context getContext() {
         return context.get();
     }
@@ -89,6 +108,9 @@ public class EventBus {
         }
     }
 
+    /**
+     * Clear the observables list
+     */
     public void clear() {
         synchronized (observables) {
             observables.clear();
@@ -133,11 +155,21 @@ public class EventBus {
         }
     }
 
+    /**
+     * Dispatches event as sticky. This means that every one that suscribes after this event will
+     * also receive it (if listening to it)
+     * @param event to dispatch
+     */
     public void dispatchEventSticky(@NonNull Event event) {
         stickyEvents.add(event);
         dispatchEvent(event);
     }
 
+    /**
+     * Removes an event from the sticky list
+     * @param event
+     * @return boolean if removed
+     */
     public boolean removeEventSticky(@NonNull Event event) {
         return stickyEvents.remove(event);
     }

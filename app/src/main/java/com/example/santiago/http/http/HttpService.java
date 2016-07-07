@@ -46,15 +46,14 @@ import okhttp3.Response;
  */
 public class HttpService extends Service {
 
+    //Rest client. Mutable
     private OkHttpClient restClient = new OkHttpClient();
-
     //Those headers that should always appear
     private final Map<String, String> stickyHeaders = new ConcurrentHashMap<>();
-
+    //Map for storing the pending requests (So we can cancel them if needed)
     private final Map<HttpRequestEvent, Call> pendingRequests = new ConcurrentHashMap<>();
-
+    //A lock?
     private final Object lock = new Object();
-
     //IBinder instance so that binders can use us
     private final @NonNull IBinder serviceBinder = new HttpBinder();
 
@@ -167,6 +166,10 @@ public class HttpService extends Service {
         }
     }
 
+    /**
+     * Cancel a pending request if exists
+     * @param event
+     */
     @SuppressWarnings("unused")
     @EventAsync
     @EventMethod(HttpCancelRequestEvent.class)
@@ -177,6 +180,10 @@ public class HttpService extends Service {
             request.cancel();
     }
 
+    /**
+     * Checks that the body isnt null, else notifies
+     * @param body
+     */
     private void validateBodyNonNull(RequestBody body) {
         if (body == null) throw new NullPointerException("Body is null in a Request that needs it");
     }
