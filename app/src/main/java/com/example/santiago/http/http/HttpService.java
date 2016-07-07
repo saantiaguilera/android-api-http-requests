@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -154,7 +155,9 @@ public class HttpService extends Service {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     try {
-                        event.onHttpRequestSuccess(event.parseResponse(response));
+                        if (call.isCanceled())
+                            event.onHttpRequestFailure(new CancellationException("Request has been cancelled"));
+                        else event.onHttpRequestSuccess(event.parseResponse(response));
                     } catch (HttpParseException e) {
                         event.onHttpRequestFailure(e);
                     } finally {
