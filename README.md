@@ -1,14 +1,8 @@
-#OkHttp Request wrapper
+#OkHttp Request wrapper w events
 
-##Wrapper of OkHttp3 to make Network Calls from a Service (+ bg threads)
-
---------------------------------------------------------------------------------
 ###Usage
---------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------
 ###Set up
---------------------------------------------------------------------------------
 
 You should init the Http service once (You can do it n times, but with 1 its enough, consecuents will be ignored).
 
@@ -28,9 +22,9 @@ Since this uses the Event bus, requests are events and responses too. If a class
 
 We will take care of the rest (even garbage collecting and avoiding memory leaks)
 
---------------------------------------------------------------------------------
+
 ###Creating a Request
---------------------------------------------------------------------------------
+
 
 Simply create a Event class that subclassifies the RequestEvent class
 
@@ -84,10 +78,7 @@ public class GetRequestEvent extends RequestEvent<String> {
 }
 ```
 
-
---------------------------------------------------------------------------------
 ###Executing
---------------------------------------------------------------------------------
 
 Just do
 ```Java
@@ -95,15 +86,12 @@ Just do
 EventBus.getHttpInstance().dispatchEvent(new GetRequestEvent());
 ```
 
-
--------------------------------------------------------------------
 ##Events
--------------------------------------------------------------------
 
 Create somewhere an instance of an EventBus.
 With this you will be able to start suscribing objects to "receive events" and also dispatching events to them!
 ```Java
-eventBus = new EventBus(aContextWrapper);
+eventBus = new EventBus(aContext);
 ```
 
 If you want a class to start listening to events just
