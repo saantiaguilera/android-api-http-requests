@@ -50,8 +50,8 @@ Since this uses the Event library, (you will be doing requests via events and re
 So for each EventManager that will be able to "handle network connections" add it to the HttpManager.
 
 ```Java
-        EventManager eventManager = new EventManager(mActivity, aTag);
-        httpManager.addEventManager(eventManager);
+        EventManager eventBus = new EventManager(mActivity, aTag);
+        httpManager.addEventManager(eventBus);
 ```
 
 --------------------------------------------------------------------------------
@@ -111,5 +111,5 @@ Executing
 Just do 
 ```Java
 //Somewhere in a method...
-eventManager.dispatchEvent(new GetRequestEvent());
+eventBus.dispatchEvent(new GetRequestEvent());
 ```

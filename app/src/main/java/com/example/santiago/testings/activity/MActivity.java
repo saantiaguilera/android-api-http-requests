@@ -8,9 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.santiago.event.EventManager;
+import com.example.santiago.event.EventBus;
 import com.example.santiago.event.anotation.EventMethod;
-import com.example.santiago.http.http.HttpManager;
 import com.example.santiago.http_requests.R;
 import com.example.santiago.testings.event.FailureEvent;
 import com.example.santiago.testings.event.GetRequestEvent;
@@ -22,9 +21,6 @@ import com.example.santiago.testings.event.SuccessEvent;
  * Created by santiago on 13/05/16.
  */
 public class MActivity extends Activity {
-
-    private EventManager eventManager;
-    private HttpManager httpManager;
 
     private TextView getButton;
 
@@ -46,23 +42,15 @@ public class MActivity extends Activity {
 
         getButton = (TextView) findViewById(R.id.activity_m_get_request);
 
-        //Get the http manager instance we will be using in this activity
-        httpManager = HttpManager.getInstance();
-
-        //Stuff we should know about (else go to the Controllers-and-events github repo)
-        eventManager = new EventManager(this, this);
-        eventManager.addObservable(this);
-
-        //Add the eventmanager that will be able to dispatch events from the network
-        httpManager.addEventManager(eventManager);
-
         //Stuff we should know about
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eventManager.dispatchEvent(new GetRequestEvent());
+                EventBus.getHttpBus().dispatchEvent(new GetRequestEvent());
             }
         });
+
+        EventBus.getHttpBus().addObservable(this);
     }
 
 
@@ -82,22 +70,6 @@ public class MActivity extends Activity {
             Log.w(MActivity.class.getName(), event.getException().getMessage());
             Toast.makeText(MActivity.this, event.getException().getMessage(), Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        //Start the http manager
-        httpManager.onStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        //Stop the http manager
-        httpManager.onStop(this);
     }
 
 }

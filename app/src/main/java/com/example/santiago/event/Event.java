@@ -1,21 +1,12 @@
 package com.example.santiago.event;
 
 /**
+ * Ideally it should be an interface (it was in previous versions)
+ * But because im iterating in all inherited classes (its easy), if I use interfaces
+ * it get harder because I have to search over all inheritances of the interfaces + myClass (and
+ * repeat this with all its supers)
+ *
  * Created by santiaguilera@theamalgama.com on 01/03/16.
  */
 public abstract class Event {
-
-    private int parentHash = -1;
-
-    public void setParentHashCode(int parentHash) {
-        this.parentHash = parentHash;
-    }
-
-    public int getParentHashCode() {
-        if (parentHash != -1)
-            return parentHash;
-
-        return super.hashCode();
-    }
-
 }
