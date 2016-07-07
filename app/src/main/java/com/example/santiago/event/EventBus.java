@@ -20,16 +20,17 @@ import java.util.List;
  * Created by santiaguilera@theamalgama.com on 01/03/16.
  */
 public class EventBus {
+
     //Context asociated with this bus
     private WeakReference<ContextWrapper> context = null;
-    //Dude in charge of dispatching events
-    private EventDispatcher dispatcher;
     //Singleton for the http bus
-    private static EventBus httpBus;
+    private static EventBus httpBus = null;
+    //Dude in charge of dispatching events
+    private final @NonNull EventDispatcher dispatcher = new EventDispatcher();
     //List of all the objects willing to receive events
-    private final List<WeakReference<Object>> observables = new ArrayList<>();
+    private final @NonNull List<WeakReference<Object>> observables = new ArrayList<>();
     //List of all the events that are sticky (are sent to even new observables)
-    private final List<Event> stickyEvents = new ArrayList<>();
+    private final @NonNull List<Event> stickyEvents = new ArrayList<>();
 
     /**
      * This shouldnt be called by anyone except us on the start of the app
@@ -38,7 +39,7 @@ public class EventBus {
      * @param context
      * @return bus
      */
-    public static EventBus _initHttpBus(@NonNull ContextWrapper context) {
+    public static @NonNull EventBus _initHttpBus(@NonNull ContextWrapper context) {
         if (httpBus == null) {
             synchronized (EventBus.class) {
                 if (httpBus == null) httpBus = new EventBus(context);
@@ -55,7 +56,7 @@ public class EventBus {
      * Getter for the Http bus. Its a singleton so all responses and requests are done over this the same bus
      * @return http bus
      */
-    public static EventBus getHttpBus() {
+    public static @NonNull EventBus getHttpBus() {
         if (httpBus == null)
             throw new IllegalStateException("Trying to get HttpBus without init. Be sure you are calling initHttpBus first. A good practice would be in a Application or a ContentProvider :)");
 
@@ -68,8 +69,6 @@ public class EventBus {
      */
     public EventBus(@NonNull ContextWrapper context){
         this.context = new WeakReference<>(context);
-
-        dispatcher = new EventDispatcher();
     }
 
     /**
@@ -174,7 +173,7 @@ public class EventBus {
         return stickyEvents.remove(event);
     }
 
-    private void dispatchStickies(Object observable) {
+    private void dispatchStickies(@NonNull Object observable) {
         for (Event event : stickyEvents)
             dispatcher.dispatchEvent(event, observable);
     }

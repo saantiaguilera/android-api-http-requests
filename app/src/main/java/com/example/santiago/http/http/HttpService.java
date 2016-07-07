@@ -47,13 +47,13 @@ import okhttp3.Response;
 public class HttpService extends Service {
 
     //Rest client. Mutable
-    private OkHttpClient restClient = new OkHttpClient();
+    private @NonNull OkHttpClient restClient = new OkHttpClient();
     //Those headers that should always appear
-    private final Map<String, String> stickyHeaders = new ConcurrentHashMap<>();
+    private final @NonNull Map<String, String> stickyHeaders = new ConcurrentHashMap<>();
     //Map for storing the pending requests (So we can cancel them if needed)
-    private final Map<HttpRequestEvent, Call> pendingRequests = new ConcurrentHashMap<>();
+    private final @NonNull Map<HttpRequestEvent, Call> pendingRequests = new ConcurrentHashMap<>();
     //A lock?
-    private final Object lock = new Object();
+    private final @NonNull Object lock = new Object();
     //IBinder instance so that binders can use us
     private final @NonNull IBinder serviceBinder = new HttpBinder();
 
@@ -93,10 +93,9 @@ public class HttpService extends Service {
 
     /**
      * Async method from where the requests are done
-     *
      * @param event
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "unchecked"})
     @RequiresPermission(Manifest.permission.INTERNET)
     @EventAsync //Because maybe theres heavy shit in the event. Like loading a whole image
     @EventMethod(HttpRequestEvent.class)
@@ -173,8 +172,8 @@ public class HttpService extends Service {
     @SuppressWarnings("unused")
     @EventAsync
     @EventMethod(HttpCancelRequestEvent.class)
-    private void onCancelRequestEvent(HttpCancelRequestEvent event) {
-        Call request = pendingRequests.get(event);
+    private void onCancelRequestEvent(@NonNull HttpCancelRequestEvent event) {
+        Call request = pendingRequests.get(event.getCancelEvent());
 
         if (request != null && !request.isCanceled())
             request.cancel();
@@ -184,8 +183,8 @@ public class HttpService extends Service {
      * Checks that the body isnt null, else notifies
      * @param body
      */
-    private void validateBodyNonNull(RequestBody body) {
-        if (body == null) throw new NullPointerException("Body is null in a Request that needs it");
+    private void validateBodyNonNull(@Nullable RequestBody body) {
+        if (body == null) throw new NullPointerException("A request about to execute needs a body and its null. Please check :)");
     }
 
     /*---------------CONFIGS---------------*/
@@ -201,7 +200,7 @@ public class HttpService extends Service {
     @SuppressWarnings("unused")
     @EventAsync
     @EventMethod(HttpStickyHeadersEvent.class)
-    private void newStickyHeaders(HttpStickyHeadersEvent event) {
+    private void newStickyHeaders(@NonNull HttpStickyHeadersEvent event) {
         for (String deleteKey : event.getRemovedKeys())
             stickyHeaders.remove(deleteKey);
 
@@ -211,7 +210,7 @@ public class HttpService extends Service {
     @SuppressWarnings("unused")
     @EventAsync
     @EventMethod(HttpDispatcherEvent.class)
-    private void newDispatcherEvent(HttpDispatcherEvent event) {
+    private void newDispatcherEvent(@NonNull HttpDispatcherEvent event) {
         OkHttpClient.Builder builder = restClient.newBuilder().dispatcher(event.getDispatcher());
 
         synchronized (lock) {
@@ -222,7 +221,7 @@ public class HttpService extends Service {
     @SuppressWarnings("unused")
     @EventAsync
     @EventMethod(HttpTimeoutsEvent.class)
-    private void newTimeoutsEvent(HttpTimeoutsEvent event) {
+    private void newTimeoutsEvent(@NonNull HttpTimeoutsEvent event) {
         OkHttpClient.Builder builder = restClient.newBuilder();
         builder.connectTimeout(event.getConnectionTimeout(), TimeUnit.SECONDS);
         builder.readTimeout(event.getReadTimeout(), TimeUnit.SECONDS);
@@ -236,7 +235,7 @@ public class HttpService extends Service {
     @SuppressWarnings("unused")
     @EventAsync
     @EventMethod(HttpCookieEvent.class)
-    private void newCookieEvent(HttpCookieEvent event) {
+    private void newCookieEvent(@NonNull HttpCookieEvent event) {
         OkHttpClient.Builder builder = restClient.newBuilder().cookieJar(event.getCookies());
 
         synchronized (lock) {
@@ -247,7 +246,7 @@ public class HttpService extends Service {
     @SuppressWarnings("unused")
     @EventAsync
     @EventMethod(HttpCacheEvent.class)
-    private void newCacheEvent(HttpCacheEvent event) {
+    private void newCacheEvent(@NonNull HttpCacheEvent event) {
         OkHttpClient.Builder builder = restClient.newBuilder().cache(event.getCache());
 
         synchronized (lock) {
@@ -258,7 +257,7 @@ public class HttpService extends Service {
     @SuppressWarnings("unused")
     @EventAsync
     @EventMethod(HttpInterceptorEvent.class)
-    private void newInterceptorEvent(HttpInterceptorEvent event) {
+    private void newInterceptorEvent(@NonNull HttpInterceptorEvent event) {
         OkHttpClient.Builder builder = restClient.newBuilder();
         if (event.isNetwork())
             builder.addNetworkInterceptor(event.getInterceptor());
@@ -272,7 +271,7 @@ public class HttpService extends Service {
     @SuppressWarnings("unused")
     @EventAsync
     @EventMethod(HttpAuthenticatorEvent.class)
-    private void newAuthenticatorEvent(HttpAuthenticatorEvent event) {
+    private void newAuthenticatorEvent(@NonNull HttpAuthenticatorEvent event) {
         OkHttpClient.Builder builder = restClient.newBuilder().authenticator(event.getAuthenticator());
 
         synchronized (lock) {

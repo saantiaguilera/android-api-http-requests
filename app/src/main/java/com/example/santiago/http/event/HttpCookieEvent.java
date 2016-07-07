@@ -11,8 +11,7 @@ import okhttp3.CookieJar;
  */
 public class HttpCookieEvent extends Event {
 
-    private @NonNull
-    CookieJar cookies;
+    private @NonNull CookieJar cookies;
 
     public HttpCookieEvent(@NonNull CookieJar cookies) {
         this.cookies = cookies;

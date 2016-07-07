@@ -11,8 +11,7 @@ import okhttp3.Dispatcher;
  */
 public class HttpDispatcherEvent extends Event {
 
-    private @NonNull
-    Dispatcher dispatcher;
+    private @NonNull Dispatcher dispatcher;
 
     public HttpDispatcherEvent(@NonNull Dispatcher dispatcher) {
         this.dispatcher = dispatcher;

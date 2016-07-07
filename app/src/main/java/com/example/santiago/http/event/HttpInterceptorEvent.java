@@ -12,8 +12,7 @@ import okhttp3.Interceptor;
 public class HttpInterceptorEvent extends Event {
 
     private boolean isNetwork = false;
-    private @NonNull
-    Interceptor interceptor;
+    private @NonNull Interceptor interceptor;
 
     public HttpInterceptorEvent(@NonNull Interceptor interceptor) {
         this.interceptor = interceptor;

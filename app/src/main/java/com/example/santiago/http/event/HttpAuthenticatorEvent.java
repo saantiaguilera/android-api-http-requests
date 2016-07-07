@@ -11,8 +11,7 @@ import okhttp3.Authenticator;
  */
 public class HttpAuthenticatorEvent extends Event {
 
-    private @NonNull
-    Authenticator authenticator;
+    private @NonNull Authenticator authenticator;
 
     public HttpAuthenticatorEvent(@NonNull Authenticator authenticator) {
         this.authenticator = authenticator;
