@@ -12,7 +12,9 @@ import com.example.santiago.event.EventBus;
 import com.example.santiago.event.anotation.EventMethod;
 import com.example.santiago.http_requests.R;
 import com.example.santiago.testings.event.FailureEvent;
-import com.example.santiago.testings.event.GetRequestEvent;
+import com.example.santiago.testings.event.GetHttpRequestEvent;
+import com.example.santiago.testings.event.PostHttpRequestEvent;
+import com.example.santiago.testings.event.DelayedHttpRequestEvent;
 import com.example.santiago.testings.event.SuccessEvent;
 
 /**
@@ -23,6 +25,8 @@ import com.example.santiago.testings.event.SuccessEvent;
 public class MActivity extends Activity {
 
     private TextView getButton;
+    private TextView postButton;
+    private TextView delayButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +45,28 @@ public class MActivity extends Activity {
         setContentView(R.layout.activity_m);
 
         getButton = (TextView) findViewById(R.id.activity_m_get_request);
+        postButton = (TextView) findViewById(R.id.activity_m_post_request);
+        delayButton = (TextView) findViewById(R.id.activity_m_redirects_request);
 
         //Stuff we should know about
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getHttpBus().dispatchEvent(new GetRequestEvent());
+                EventBus.getHttpBus().dispatchEvent(new GetHttpRequestEvent());
+            }
+        });
+
+        delayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getHttpBus().dispatchEvent(new DelayedHttpRequestEvent());
+            }
+        });
+
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getHttpBus().dispatchEvent(new PostHttpRequestEvent());
             }
         });
 

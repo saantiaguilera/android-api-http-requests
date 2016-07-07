@@ -14,12 +14,12 @@ import okhttp3.Response;
 
 /**
  * Class for requests.
- * Currently, requests are defined inside subclasses of RequestEvent, this means each
+ * Currently, requests are defined inside subclasses of HttpRequestEvent, this means each
  * request you will have you will define it inside one of these.
  *
  * Created by santiago on 13/05/16.
  */
-public abstract class RequestEvent<E> extends Event {
+public abstract class HttpRequestEvent<E> extends Event {
 
     public abstract @NonNull String getUrl();
 

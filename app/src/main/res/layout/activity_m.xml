@@ -16,4 +16,26 @@
         android:textSize="20sp"
         android:text="GET REQUEST" />
 
+    <TextView
+        android:id="@+id/activity_m_post_request"
+
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+
+        android:gravity="center"
+
+        android:textSize="20sp"
+        android:text="POST REQUEST" />
+
+    <TextView
+        android:id="@+id/activity_m_redirects_request"
+
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+
+        android:gravity="center"
+
+        android:textSize="20sp"
+        android:text="DELAYED GET REQUEST" />
+
 </LinearLayout>

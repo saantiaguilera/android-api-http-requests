@@ -117,7 +117,7 @@ public class EventBus {
 
         //Iterate through all the objects listening and dispatch it too
         for(WeakReference<Object> observable : observablesCopy)
-            if(observable != null)
+            if(observable.get() != null)
                 dispatcher.dispatchEvent(event, observable.get());
             else shouldCleanReferences = true;
 

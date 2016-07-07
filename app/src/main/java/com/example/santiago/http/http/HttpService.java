@@ -8,22 +8,23 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
-import android.support.v4.util.Pair;
 
 import com.example.santiago.event.EventBus;
 import com.example.santiago.event.anotation.EventAsync;
 import com.example.santiago.event.anotation.EventMethod;
 import com.example.santiago.http.event.HttpAuthenticatorEvent;
 import com.example.santiago.http.event.HttpCacheEvent;
+import com.example.santiago.http.event.HttpCancelRequestEvent;
 import com.example.santiago.http.event.HttpCookieEvent;
 import com.example.santiago.http.event.HttpDispatcherEvent;
 import com.example.santiago.http.event.HttpInterceptorEvent;
 import com.example.santiago.http.event.HttpStickyHeadersEvent;
 import com.example.santiago.http.event.HttpTimeoutsEvent;
-import com.example.santiago.http.event.RequestEvent;
+import com.example.santiago.http.event.HttpRequestEvent;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +49,9 @@ public class HttpService extends Service {
     private OkHttpClient restClient = new OkHttpClient();
 
     //Those headers that should always appear
-    private Map<String, String> stickyHeaders = new ConcurrentHashMap<>();
+    private final Map<String, String> stickyHeaders = new ConcurrentHashMap<>();
+
+    private final Map<HttpRequestEvent, Call> pendingRequests = new ConcurrentHashMap<>();
 
     private final Object lock = new Object();
 
@@ -97,8 +100,8 @@ public class HttpService extends Service {
     @SuppressWarnings("unused")
     @RequiresPermission(Manifest.permission.INTERNET)
     @EventAsync //Because maybe theres heavy shit in the event. Like loading a whole image
-    @EventMethod(RequestEvent.class)
-    private void onRequestEvent(@NonNull final RequestEvent event) {
+    @EventMethod(HttpRequestEvent.class)
+    private void onRequestEvent(@NonNull final HttpRequestEvent event) {
         Request.Builder request = new Request.Builder()
                 .url(event.getUrl());
 
@@ -139,10 +142,15 @@ public class HttpService extends Service {
         request.tag(event);
 
         synchronized (lock) {
-            restClient.newCall(request.build()).enqueue(new Callback() {
+            Call call = restClient.newCall(request.build());
+
+            pendingRequests.put(event, call);
+
+            call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     event.onHttpRequestFailure(e);
+                    pendingRequests.remove(event);
                 }
 
                 @Override
@@ -151,10 +159,22 @@ public class HttpService extends Service {
                         event.onHttpRequestSuccess(event.parseResponse(response));
                     } catch (HttpParseException e) {
                         event.onHttpRequestFailure(e);
+                    } finally {
+                        pendingRequests.remove(event);
                     }
                 }
             });
         }
+    }
+
+    @SuppressWarnings("unused")
+    @EventAsync
+    @EventMethod(HttpCancelRequestEvent.class)
+    private void onCancelRequestEvent(HttpCancelRequestEvent event) {
+        Call request = pendingRequests.get(event);
+
+        if (request != null && !request.isCanceled())
+            request.cancel();
     }
 
     private void validateBodyNonNull(RequestBody body) {
