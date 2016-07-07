@@ -18,13 +18,11 @@ import com.example.santiago.http.event.HttpCancelRequestEvent;
 import com.example.santiago.http.event.HttpCookieEvent;
 import com.example.santiago.http.event.HttpDispatcherEvent;
 import com.example.santiago.http.event.HttpInterceptorEvent;
+import com.example.santiago.http.event.HttpRequestEvent;
 import com.example.santiago.http.event.HttpStickyHeadersEvent;
 import com.example.santiago.http.event.HttpTimeoutsEvent;
-import com.example.santiago.http.event.HttpRequestEvent;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;

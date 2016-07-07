@@ -11,10 +11,10 @@ import android.widget.Toast;
 import com.example.santiago.event.EventBus;
 import com.example.santiago.event.anotation.EventMethod;
 import com.example.santiago.http_requests.R;
+import com.example.santiago.testings.event.DelayedHttpRequestEvent;
 import com.example.santiago.testings.event.FailureEvent;
 import com.example.santiago.testings.event.GetHttpRequestEvent;
 import com.example.santiago.testings.event.PostHttpRequestEvent;
-import com.example.santiago.testings.event.DelayedHttpRequestEvent;
 import com.example.santiago.testings.event.SuccessEvent;
 
 /**

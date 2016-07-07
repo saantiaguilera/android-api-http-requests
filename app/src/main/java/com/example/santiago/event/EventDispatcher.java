@@ -14,8 +14,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * TODO Beware that the timeval also affects network calls (because they are idle) so put something that shouldnt affect their own timeout ?
- *
  * @note In case you are planning on using multiple EventManagers, there will be only
  * one handler and pool executor for all of them.
  *
