@@ -1,115 +1,173 @@
-# android-api-http-requests
-OkHttp Request wrapper
+#OkHttp Request wrapper
 
-Wrapper of OkHttp3 to make Network Calls from a Service (+ bg threads)
-
-Uses Events (https://github.com/saantiaguilera/android-api-controllers-and-events)
+##Wrapper of OkHttp3 to make Network Calls from a Service (+ bg threads)
 
 --------------------------------------------------------------------------------
-TODO
---------------------------------------------------------------------------------
-
-- Add tag to RequestEvent and make them cancelables via tags.
-
-
-
---------------------------------------------------------------------------------
-Usage
+###Usage
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-Set up
+###Set up
 --------------------------------------------------------------------------------
 
-In an Activity (or something that you plan on binding with the service to make the network calls)
-You should Override your onStart and onStop and call the HttpManager methods.
+You should init the Http service once (You can do it n times, but with 1 its enough, consecuents will be ignored).
+
+Its highly recommended to do it in a Application context (Or use a ContentProvider), but you can still do it in a Activity or anything that has a reference to a context.
+
+Note that without initializing it, it may have unexpected behaviors
 ```Java
-    private HttpManager httpManager;
-    
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        httpManager.onStart(aContextWrapper);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        httpManager.onStop(aContextWrapper);
-    }
+    //In a Application onCreate()
+    EventBus._initHttpBus(this);
 ```
 
-For creating an instance of HttpManager, since its a Singleton use 
-```Java
-        httpManager = HttpManager.getInstance();
-```
-
-Since this uses the Event library, (you will be doing requests via events and responses can dispatch other events). You can have more than one EventManager (or EventBus if you are familiar with it)
-So for each EventManager that will be able to "handle network connections" add it to the HttpManager.
+Since this uses the Event bus, requests are events and responses too. If a class wants to listen to http responses just suscribe it
 
 ```Java
-        EventManager eventBus = new EventManager(mActivity, aTag);
-        httpManager.addEventManager(eventBus);
+    EventBus.getHttpBus().addObservable(this);
 ```
+
+We will take care of the rest (even garbage collecting and avoiding memory leaks)
 
 --------------------------------------------------------------------------------
-Creating a Request
+###Creating a Request
 --------------------------------------------------------------------------------
 
 Simply create a Event class that subclassifies the RequestEvent class
 
 Get Request Example:
 ```Java
-public class GetRequestEvent extends RequestEvent<String> { 
+public class GetRequestEvent extends RequestEvent<String> {
 //The generic value will be the expected class to be returned from the network call (in this case is a String)
 
-    private int aParam;
+    @NonNull
+    @Override
+    public String getUrl() {
+        return "http://the.url.com";
+    }
 
-    public GetRequestEvent(int aParam) {
-      this.aParam = aParam;
+    @NonNull
+    @Override
+    public HttpMethod getHttpMethod() {
+        return HttpMethod.GET;
+    }
+
+    @Nullable
+    @Override
+    //You can override this if you need it
+    public RequestBody getBody() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    //You can override this if you need it
+    public Headers getHeaders() {
+        return null;
     }
 
     @Override
-    protected Request buildRequest() {
-        //Here build the request, if you will use params for body headers wver just pass them from the constructor or via setters
-        return new Request.Builder()
-                .url("http://someurltohit.com/somepath/" + aParam)
-                .get()
-                .build();
+    public String parseResponse(@NonNull Response response) throws HttpParseException {
+        //Do something
     }
 
     @Override
-    protected String parseResponse(@NonNull Response response) throws HttpParseException {
-        try {
-            //Parse the response if you plan on returning a particular class
-            return response.body().string();
-        } catch (IOException e) {
-            throw new HttpParseException(e);
-        }
+    public void onHttpRequestFailure(@NonNull Exception exception) {
+        //Do something
+        EventBus.getHttpBus().dispatchEvent(new FailureEvent(exception));
     }
 
     @Override
-    protected void onHttpRequestFailure(@NonNull EventListener dispatcher, @NonNull Exception exception) {
-        //Do something if the request failed...
+    public void onHttpRequestSuccess(String result) {
+        //Do something
+        EventBus.getHttpBus().dispatchEvent(new SuccessEvent(result));
     }
-
-    @Override
-    protected void onHttpRequestSuccess(@NonNull EventListener dispatcher, String result) {
-        //Do something if the request succeeded...
-    }
-
 }
 ```
 
 
 --------------------------------------------------------------------------------
-Executing
+###Executing
 --------------------------------------------------------------------------------
 
-Just do 
+Just do
 ```Java
 //Somewhere in a method...
-eventBus.dispatchEvent(new GetRequestEvent());
+EventBus.getHttpInstance().dispatchEvent(new GetRequestEvent());
+```
+
+
+-------------------------------------------------------------------
+##Events
+-------------------------------------------------------------------
+
+Create somewhere an instance of an EventBus.
+With this you will be able to start suscribing objects to "receive events" and also dispatching events to them!
+```Java
+eventBus = new EventBus(aContextWrapper);
+```
+
+If you want a class to start listening to events just
+```Java
+eventBus.addObservable(something);
+//or...
+eventBus.removeObservable(something);
+```
+
+Now this "something" is able to start receiving Events !! But where does he receives them?
+
+Lets say we have OneEvent and TwoEvent. He can receives them like:
+```Java
+@EventMethod(OneEvent.class)
+private void oneMethod() {
+    //Do something
+}
+
+@EventMethod(TwoEvent.class)
+private void anotherMethod(TwoEvent event) {
+    //Do something
+}
+```
+Note: Method can only have either 1 param of the particular Event type or none
+
+Note: When I get more time I will try to support the repeatable anotation since its not available yet
+(Kinda like the @RequiresPermission() does)
+
+So... Now we know how to receive events and how to start listening. What about sending one ?
+```Java
+///Somewhere in a method...
+eventBus.dispatchEvent(new OneEvent());
+```
+And this will alone call all the methods that have its anotation and are observing that eventManager instance.
+
+Also if you want to execute that particular method in another thread just do
+```Java
+@EventAsync
+@EventMethod(SomeEvent.class)
+private void whenCallingThisFromADispatchOfAnEventItWillBeAsynchronous() {
+  //Do something...
+}
+```
+But if you dispatch another event inside there, be careful that the observables will still execute their code in the main thread!
+(Unless they also specified @EventAsync)
+
+Finally, what is SomeEvent ??
+```Java
+public class SomeEvent extends Event {
+    int aParam;
+    String anotherParam;
+
+    public SomeEvent(int aParam, String anotherParam) {
+      this.aParam = aParam;
+      this.anotherParam = anotherParam;
+    }
+
+    //getters...
+}
+```
+Its just a subclassification of Event. Although it can have its own logic, ideally it should only be able to carry data from some
+place to another.
+
+You also have some other features like "dispatchSticky" which dispatches an event to all the current observables + the new ones that suscribe later to the bus
+```Java
+eventBus.dispatchEventSticky(new SomeEvent());
 ```
