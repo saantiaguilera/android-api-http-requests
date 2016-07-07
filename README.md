@@ -1,6 +1,6 @@
 #OkHttp Request wrapper w events
 
-###Usage
+##Networking
 
 ###Set up
 
@@ -85,6 +85,7 @@ Just do
 //Somewhere in a method...
 EventBus.getHttpInstance().dispatchEvent(new GetRequestEvent());
 ```
+
 
 ##Events
 
