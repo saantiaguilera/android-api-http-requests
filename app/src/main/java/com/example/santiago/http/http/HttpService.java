@@ -4,16 +4,19 @@ import android.Manifest;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 
+import com.example.santiago.event.Event;
 import com.example.santiago.event.EventBus;
 import com.example.santiago.event.anotation.EventAsync;
 import com.example.santiago.event.anotation.EventMethod;
 import com.example.santiago.http.event.HttpAuthenticatorEvent;
 import com.example.santiago.http.event.HttpCacheEvent;
+import com.example.santiago.http.event.HttpCancelAllRequestsEvent;
 import com.example.santiago.http.event.HttpCancelRequestEvent;
 import com.example.santiago.http.event.HttpCookieEvent;
 import com.example.santiago.http.event.HttpDispatcherEvent;
@@ -55,6 +58,8 @@ public class HttpService extends Service {
     private final @NonNull Object lock = new Object();
     //IBinder instance so that binders can use us
     private final @NonNull IBinder serviceBinder = new HttpBinder();
+    //Handler for posting in the main thread
+    private final Handler resultsDispatcher = new Handler();
 
     @Override
     public void onCreate() {
@@ -139,31 +144,57 @@ public class HttpService extends Service {
         request.tag(event);
 
         synchronized (lock) {
-            Call call = restClient.newCall(request.build());
+            //Check if the event holds a singular OkHttpClient.
+            OkHttpClient client = event.overrideClient(restClient.newBuilder());
+            if (client == null) //Else use the default
+                client = restClient;
+
+            Call call = client.newCall(request.build());
 
             pendingRequests.put(event, call);
 
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    event.onHttpRequestFailure(e);
+                    //If its cancelled dont post anything, since the user has to cancel it, so he knows.
+                    if (!call.isCanceled())
+                        post(event, e);
+
                     pendingRequests.remove(event);
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     try {
-                        if (call.isCanceled())
-                            event.onHttpRequestFailure(new CancellationException("Request has been cancelled"));
-                        else event.onHttpRequestSuccess(event.parseResponse(response));
+                        //Note that the parseResponse is still in the worker thread. But not the success
+                        if (!call.isCanceled())
+                            post(event, event.parseResponse(response));
                     } catch (HttpParseException e) {
-                        event.onHttpRequestFailure(e);
+                        post(event, e);
                     } finally {
                         pendingRequests.remove(event);
                     }
                 }
             });
         }
+    }
+
+    private void post(final HttpRequestEvent event, final Exception exception) {
+        resultsDispatcher.post(new Runnable() {
+            @Override
+            public void run() {
+                event.onHttpRequestFailure(exception);
+            }
+        });
+    }
+
+    private void post(final HttpRequestEvent event, final Object object) {
+        resultsDispatcher.post(new Runnable() {
+            @Override
+            public void run() {
+                event.onHttpRequestSuccess(object);
+            }
+        });
     }
 
     /**
@@ -178,6 +209,18 @@ public class HttpService extends Service {
 
         if (request != null && !request.isCanceled())
             request.cancel();
+    }
+
+    @SuppressWarnings("unused")
+    @EventAsync
+    @EventMethod(HttpCancelAllRequestsEvent.class)
+    private void onCancelAllRequestsEvent() {
+        for (Call call : pendingRequests.values())
+            call.cancel();
+
+        pendingRequests.clear();
+        //Since a single event can override the client, theres no guarantee that it will only be a single dispatcher across all requests
+//        restClient.dispatcher().cancelAll();
     }
 
     /**
@@ -285,7 +328,8 @@ public class HttpService extends Service {
      */
     public class HttpBinder extends Binder {
 
-        public @NonNull HttpService getService() {
+        public @NonNull
+        HttpService getService() {
             return HttpService.this;
         }
 

@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @note In case you are planning on using multiple EventManagers, there will be only
+ * @note In case you are planning on using multiple EventBus, there will be only
  * one handler and pool executor for all of them.
  *
  * Created by santiago on 20/04/16.
