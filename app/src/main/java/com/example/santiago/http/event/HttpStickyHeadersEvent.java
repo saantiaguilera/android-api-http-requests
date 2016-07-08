@@ -14,10 +14,8 @@ import java.util.Map;
  */
 public class HttpStickyHeadersEvent extends Event {
 
-    private @NonNull
-    List<String> removed;
-    private @NonNull
-    Map<String, String> added;
+    private @NonNull List<String> removed;
+    private @NonNull Map<String, String> added;
 
     public HttpStickyHeadersEvent() {
         removed = new ArrayList<>();
@@ -38,9 +36,7 @@ public class HttpStickyHeadersEvent extends Event {
         added.put(key, value);
     }
 
-    public @NonNull
-    List<String> getRemovedKeys() { return removed; }
-    public @NonNull
-    Map<String, String> getEntries() { return added; }
+    public @NonNull List<String> getRemovedKeys() { return removed; }
+    public @NonNull Map<String, String> getEntries() { return added; }
 
 }

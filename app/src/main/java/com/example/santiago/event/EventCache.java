@@ -31,14 +31,11 @@ final class EventCache {
     //Loop time for cleaning our map of lru items
     private static final int LRU_DELAYED_TIME_FOR_PROCESS = 1_200_000; // Default: 20 minutes
     //Handler that will post messages to a handler thread for the lru clean up
-    private final @NonNull
-    Handler mHandler;
+    private final @NonNull Handler mHandler;
 
     //Map for the cache and one for the hits across time
-    private final @NonNull
-    Map<Class, Map<Class, List<Method>>> cache;
-    private final @NonNull
-    Map<Class, Long> hits;
+    private final @NonNull Map<Class, Map<Class, List<Method>>> cache;
+    private final @NonNull Map<Class, Long> hits;
 
     public EventCache() {
         cache = new ConcurrentHashMap<>();
@@ -85,8 +82,7 @@ final class EventCache {
      * @param annotatedClass annotation
      * @return Map of annotations and methods
      */
-    public @Nullable
-    List<Method> get(@NonNull Class clazz, @NonNull Class annotatedClass) {
+    public @Nullable List<Method> get(@NonNull Class clazz, @NonNull Class annotatedClass) {
         if (cache.get(clazz) == null || cache.get(clazz).get(annotatedClass) == null)
             return null;
 

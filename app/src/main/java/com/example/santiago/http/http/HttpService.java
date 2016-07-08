@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 
+import com.example.santiago.event.Event;
 import com.example.santiago.event.EventBus;
 import com.example.santiago.event.anotation.EventAsync;
 import com.example.santiago.event.anotation.EventMethod;
@@ -47,20 +48,15 @@ import okhttp3.Response;
 public class HttpService extends Service {
 
     //Rest client. Mutable
-    private @NonNull
-    OkHttpClient restClient = new OkHttpClient();
+    private @NonNull OkHttpClient restClient = new OkHttpClient();
     //Those headers that should always appear
-    private final @NonNull
-    Map<String, String> stickyHeaders = new ConcurrentHashMap<>();
+    private final @NonNull Map<String, String> stickyHeaders = new ConcurrentHashMap<>();
     //Map for storing the pending requests (So we can cancel them if needed)
-    private final @NonNull
-    Map<HttpRequestEvent, Call> pendingRequests = new ConcurrentHashMap<>();
+    private final @NonNull Map<HttpRequestEvent, Call> pendingRequests = new ConcurrentHashMap<>();
     //A lock?
-    private final @NonNull
-    Object lock = new Object();
+    private final @NonNull Object lock = new Object();
     //IBinder instance so that binders can use us
-    private final @NonNull
-    IBinder serviceBinder = new HttpBinder();
+    private final @NonNull IBinder serviceBinder = new HttpBinder();
     //Handler for posting in the main thread
     private final Handler resultsDispatcher = new Handler();
 
@@ -331,8 +327,7 @@ public class HttpService extends Service {
      */
     public class HttpBinder extends Binder {
 
-        public @NonNull
-        HttpService getService() {
+        public @NonNull HttpService getService() {
             return HttpService.this;
         }
 

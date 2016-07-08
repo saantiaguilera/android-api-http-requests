@@ -28,8 +28,7 @@ public abstract class HttpRequestEvent<E> extends Event {
      * Endpoint of the REST request
      * @return endpoint of the request
      */
-    public abstract @NonNull
-    String getUrl();
+    public abstract @NonNull String getUrl();
 
     /**
      *
@@ -38,8 +37,7 @@ public abstract class HttpRequestEvent<E> extends Event {
      * REST HttpMethod
      * @return method
      */
-    public abstract @NonNull
-    HttpMethod getHttpMethod();
+    public abstract @NonNull HttpMethod getHttpMethod();
 
     /**
      *
@@ -48,8 +46,7 @@ public abstract class HttpRequestEvent<E> extends Event {
      * Body for the request. If the method needs them you MUST override it else it will crash
      * @return RequestBody with the params or empty one if none
      */
-    public @Nullable
-    RequestBody getBody() {
+    public @Nullable RequestBody getBody() {
         return null;
     }
 
@@ -61,8 +58,7 @@ public abstract class HttpRequestEvent<E> extends Event {
      * if the service has.
      * @return headers
      */
-    public @Nullable
-    Headers getHeaders() {
+    public @Nullable Headers getHeaders() {
         return null;
     }
 
@@ -79,8 +75,7 @@ public abstract class HttpRequestEvent<E> extends Event {
      * @param builder of the default okhttpclient
      * @return okhttpclient to be used
      */
-    public @Nullable
-    OkHttpClient overrideClient(OkHttpClient.Builder builder) {
+    public @Nullable OkHttpClient overrideClient(OkHttpClient.Builder builder) {
         return null;
     }
 

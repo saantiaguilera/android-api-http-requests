@@ -9,15 +9,13 @@ import com.example.santiago.event.Event;
  */
 public class HttpCancelRequestEvent extends Event {
 
-    private @NonNull
-    HttpRequestEvent event;
+    private @NonNull HttpRequestEvent event;
 
     public HttpCancelRequestEvent(@NonNull HttpRequestEvent cancelEvent) {
         event = cancelEvent;
     }
 
-    public @NonNull
-    HttpRequestEvent getCancelEvent() {
+    public @NonNull HttpRequestEvent getCancelEvent() {
         return event;
     }
 

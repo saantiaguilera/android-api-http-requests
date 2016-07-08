@@ -31,8 +31,7 @@ final class EventDispatcher {
      *
      * @return cache were all the annotated methods are stored using ""lru""
      */
-    private @NonNull
-    EventCache getCache() {
+    private @NonNull EventCache getCache() {
         if (cache == null) {
             synchronized (EventDispatcher.class) {
                 if (cache == null) {
@@ -54,8 +53,7 @@ final class EventDispatcher {
      *
      * @return thread pool executor
      */
-    private @NonNull
-    ThreadPoolExecutor getPoolExecutor() {
+    private @NonNull ThreadPoolExecutor getPoolExecutor() {
         if (poolExecutor == null) {
             synchronized (EventDispatcher.class) {
                 if (poolExecutor == null) {
@@ -78,8 +76,7 @@ final class EventDispatcher {
      *
      * @return handler that posts messages on the main UI
      */
-    private @NonNull
-    Handler getUiHandler() {
+    private @NonNull Handler getUiHandler() {
         if (uiHandler == null) {
             synchronized (EventDispatcher.class) {
                 if (uiHandler == null) {
