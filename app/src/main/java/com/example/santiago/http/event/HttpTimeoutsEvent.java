@@ -4,7 +4,7 @@ import com.example.santiago.event.Event;
 
 /**
  * Connection timeouts in SECONDS
- * Created by santi on 06/07/16.
+ * Created by saantiaguilera on 06/07/16.
  */
 public class HttpTimeoutsEvent extends Event {
 

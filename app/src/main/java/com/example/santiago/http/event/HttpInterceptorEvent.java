@@ -7,12 +7,13 @@ import com.example.santiago.event.Event;
 import okhttp3.Interceptor;
 
 /**
- * Created by santi on 06/07/16.
+ * Created by saantiaguilera on 06/07/16.
  */
 public class HttpInterceptorEvent extends Event {
 
     private boolean isNetwork = false;
-    private @NonNull Interceptor interceptor;
+    private @NonNull
+    Interceptor interceptor;
 
     public HttpInterceptorEvent(@NonNull Interceptor interceptor) {
         this.interceptor = interceptor;
@@ -25,6 +26,7 @@ public class HttpInterceptorEvent extends Event {
 
     public boolean isNetwork() { return isNetwork; }
 
-    public @NonNull Interceptor getInterceptor() { return interceptor; }
+    public @NonNull
+    Interceptor getInterceptor() { return interceptor; }
 
 }

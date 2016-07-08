@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by santi on 06/07/16.
+ * Created by saantiaguilera on 06/07/16.
  */
 public class HttpStickyHeadersEvent extends Event {
 
-    private @NonNull List<String> removed;
-    private @NonNull Map<String, String> added;
+    private @NonNull
+    List<String> removed;
+    private @NonNull
+    Map<String, String> added;
 
     public HttpStickyHeadersEvent() {
         removed = new ArrayList<>();
@@ -36,7 +38,9 @@ public class HttpStickyHeadersEvent extends Event {
         added.put(key, value);
     }
 
-    public @NonNull List<String> getRemovedKeys() { return removed; }
-    public @NonNull Map<String, String> getEntries() { return added; }
+    public @NonNull
+    List<String> getRemovedKeys() { return removed; }
+    public @NonNull
+    Map<String, String> getEntries() { return added; }
 
 }

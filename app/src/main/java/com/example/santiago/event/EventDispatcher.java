@@ -9,37 +9,65 @@ import com.example.santiago.event.anotation.EventMethod;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @note In case you are planning on using multiple EventManagers, there will be only
+ * @note In case you are planning on using multiple EventBus, there will be only
  * one handler and pool executor for all of them.
  *
- * Created by santiago on 20/04/16.
+ * Created by saantiaguilera on 20/04/16.
  */
-public class EventDispatcher {
+final class EventDispatcher {
+
+    /*-------------------------------Cache---------------------------------*/
+
+    private static EventCache cache = null;
+
+    /**
+     * Getter for the cache manager
+     *
+     * @return cache were all the annotated methods are stored using ""lru""
+     */
+    private @NonNull
+    EventCache getCache() {
+        if (cache == null) {
+            synchronized (EventDispatcher.class) {
+                if (cache == null) {
+                    cache = new EventCache();
+                }
+            }
+        }
+
+        return cache;
+    }
 
     /*-------------------------------Concurrency----------------------------*/
 
     private static ThreadPoolExecutor poolExecutor = null;
-    private static Handler uiHandler;
+    private static Handler uiHandler = null;
 
     /**
      * Getter for the thread pool executor
      *
      * @return thread pool executor
      */
-    private static @NonNull ThreadPoolExecutor getPoolExecutor() {
+    private @NonNull
+    ThreadPoolExecutor getPoolExecutor() {
         if (poolExecutor == null) {
-            poolExecutor = new ThreadPoolExecutor(
-                    Runtime.getRuntime().availableProcessors() * 2,
-                    Runtime.getRuntime().availableProcessors() * 2,
-                    1L,
-                    TimeUnit.MINUTES,
-                    new LinkedBlockingQueue<Runnable>()
-            );
+            synchronized (EventDispatcher.class) {
+                if (poolExecutor == null) {
+                    poolExecutor = new ThreadPoolExecutor(
+                            Runtime.getRuntime().availableProcessors() * 2,
+                            Runtime.getRuntime().availableProcessors() * 2,
+                            1L,
+                            TimeUnit.MINUTES,
+                            new LinkedBlockingQueue<Runnable>()
+                    );
+                }
+            }
         }
 
         return poolExecutor;
@@ -50,9 +78,16 @@ public class EventDispatcher {
      *
      * @return handler that posts messages on the main UI
      */
-    private static @NonNull Handler getUiHandler() {
-        if (uiHandler == null)
-            uiHandler = new Handler(Looper.getMainLooper());
+    private @NonNull
+    Handler getUiHandler() {
+        if (uiHandler == null) {
+            synchronized (EventDispatcher.class) {
+                if (uiHandler == null) {
+                    //Because we dont have guarantees its first time wont be in another thread use Looper.getMain...
+                    uiHandler = new Handler(Looper.getMainLooper());
+                }
+            }
+        }
 
         return uiHandler;
     }
@@ -115,13 +150,27 @@ public class EventDispatcher {
      * @param to object that will respond to the event
      */
     public void dispatchEvent(@NonNull final Event event, @NonNull final Object to) {
-        for (Class eventClass = event.getClass(); eventClass != Event.class; eventClass = eventClass.getSuperclass()) {
-            //Iterate through all the methods of our object that will respond to the event
-            for(final Method method : to.getClass().getDeclaredMethods()) {
-                //Get the method anotation of type EventMethod, if its value is the same as this class invoke it
-                EventMethod anotation = method.getAnnotation(EventMethod.class);
+        //If the class isnt in the cache, add it
+        if (!getCache().isCached(to.getClass())) {
+            //Iterate through all the super classes also!
+            for (Class toClass = to.getClass(); toClass != Object.class; toClass = toClass.getSuperclass()) {
+                //Loop over all the methods
+                for (Method method : toClass.getDeclaredMethods()) {
+                    //And finally if it has the Event annotation, cache that method
+                    EventMethod annotation = method.getAnnotation(EventMethod.class);
+                    if (annotation != null) {
+                        getCache().put(toClass, annotation.value(), method);
+                    }
+                }
+            }
+        }
 
-                if (anotation != null && anotation.value() == eventClass) {
+        //Iterate through all the super classes of the event !
+        for (Class eventClass = event.getClass(); eventClass != Event.class; eventClass = eventClass.getSuperclass()) {
+            //Iterate through all the methods of our object that will respond to the event (they have to be cached yes or yes)
+            List<Method> methods = getCache().get(to.getClass(), eventClass);
+            if (methods != null) {
+                for (final Method method : methods) {
                     Runnable runnable = new Runnable() {
                         @Override
                         public void run() {

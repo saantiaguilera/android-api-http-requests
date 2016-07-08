@@ -6,7 +6,7 @@ package com.example.santiago.event;
  * it get harder because I have to search over all inheritances of the interfaces + myClass (and
  * repeat this with all its supers)
  *
- * Created by santiaguilera@theamalgama.com on 01/03/16.
+ * Created by saantiaguilera on 01/03/16.
  */
 public abstract class Event {
 }

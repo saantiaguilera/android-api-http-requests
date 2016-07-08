@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * Anotation for letting an event know which method invoke from a class when dispatching itself
  *
  * <stron> Since from Android N Repeatable anotation will be supported, I cant use repeatable anotations </stron>
- * Created by santi on 16/03/16.
+ * Created by saantiaguilera on 16/03/16.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

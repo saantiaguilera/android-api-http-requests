@@ -7,16 +7,18 @@ import com.example.santiago.event.Event;
 import okhttp3.Authenticator;
 
 /**
- * Created by santi on 06/07/16.
+ * Created by saantiaguilera on 06/07/16.
  */
 public class HttpAuthenticatorEvent extends Event {
 
-    private @NonNull Authenticator authenticator;
+    private @NonNull
+    Authenticator authenticator;
 
     public HttpAuthenticatorEvent(@NonNull Authenticator authenticator) {
         this.authenticator = authenticator;
     }
 
-    public @NonNull Authenticator getAuthenticator() { return authenticator; }
+    public @NonNull
+    Authenticator getAuthenticator() { return authenticator; }
 
 }
