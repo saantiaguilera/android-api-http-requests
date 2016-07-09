@@ -142,7 +142,8 @@ public class HttpService extends Service {
 
         request.tag(event);
 
-        synchronized (lock) {
+        //Is this lock really needed ?
+        //synchronized (lock) {
             //Check if the event holds a singular OkHttpClient.
             OkHttpClient client = event.overrideClient(restClient.newBuilder());
             if (client == null) //Else use the default
@@ -175,7 +176,7 @@ public class HttpService extends Service {
                     }
                 }
             });
-        }
+        //}
     }
 
     private void post(final HttpRequestEvent event, final Exception exception) {
@@ -254,10 +255,8 @@ public class HttpService extends Service {
     @EventAsync
     @EventMethod(HttpDispatcherEvent.class)
     private void newDispatcherEvent(@NonNull HttpDispatcherEvent event) {
-        OkHttpClient.Builder builder = restClient.newBuilder().dispatcher(event.getDispatcher());
-
         synchronized (lock) {
-            restClient = builder.build();
+            restClient = restClient.newBuilder().dispatcher(event.getDispatcher()).build();
         }
     }
 
@@ -265,13 +264,11 @@ public class HttpService extends Service {
     @EventAsync
     @EventMethod(HttpTimeoutsEvent.class)
     private void newTimeoutsEvent(@NonNull HttpTimeoutsEvent event) {
-        OkHttpClient.Builder builder = restClient.newBuilder();
-        builder.connectTimeout(event.getConnectionTimeout(), TimeUnit.SECONDS);
-        builder.readTimeout(event.getReadTimeout(), TimeUnit.SECONDS);
-        builder.writeTimeout(event.getWriteTimeout(), TimeUnit.SECONDS);
-
         synchronized (lock) {
-            restClient = builder.build();
+            restClient = restClient.newBuilder()
+                            .connectTimeout(event.getConnectionTimeout(), TimeUnit.SECONDS)
+                            .readTimeout(event.getReadTimeout(), TimeUnit.SECONDS)
+                            .writeTimeout(event.getWriteTimeout(), TimeUnit.SECONDS).build();
         }
     }
 
@@ -279,10 +276,8 @@ public class HttpService extends Service {
     @EventAsync
     @EventMethod(HttpCookieEvent.class)
     private void newCookieEvent(@NonNull HttpCookieEvent event) {
-        OkHttpClient.Builder builder = restClient.newBuilder().cookieJar(event.getCookies());
-
         synchronized (lock) {
-            restClient = builder.build();
+            restClient = restClient.newBuilder().cookieJar(event.getCookies()).build();
         }
     }
 
@@ -290,10 +285,8 @@ public class HttpService extends Service {
     @EventAsync
     @EventMethod(HttpCacheEvent.class)
     private void newCacheEvent(@NonNull HttpCacheEvent event) {
-        OkHttpClient.Builder builder = restClient.newBuilder().cache(event.getCache());
-
         synchronized (lock) {
-            restClient = builder.build();
+            restClient = restClient.newBuilder().cache(event.getCache()).build();
         }
     }
 
@@ -301,12 +294,13 @@ public class HttpService extends Service {
     @EventAsync
     @EventMethod(HttpInterceptorEvent.class)
     private void newInterceptorEvent(@NonNull HttpInterceptorEvent event) {
-        OkHttpClient.Builder builder = restClient.newBuilder();
-        if (event.isNetwork())
-            builder.addNetworkInterceptor(event.getInterceptor());
-        else builder.addInterceptor(event.getInterceptor());
-
         synchronized (lock) {
+            OkHttpClient.Builder builder = restClient.newBuilder();
+
+            if (event.isNetwork())
+                builder.addNetworkInterceptor(event.getInterceptor());
+            else builder.addInterceptor(event.getInterceptor());
+
             restClient = builder.build();
         }
     }
@@ -315,10 +309,8 @@ public class HttpService extends Service {
     @EventAsync
     @EventMethod(HttpAuthenticatorEvent.class)
     private void newAuthenticatorEvent(@NonNull HttpAuthenticatorEvent event) {
-        OkHttpClient.Builder builder = restClient.newBuilder().authenticator(event.getAuthenticator());
-
         synchronized (lock) {
-            restClient = builder.build();
+            restClient = restClient.newBuilder().authenticator(event.getAuthenticator()).build();
         }
     }
 
