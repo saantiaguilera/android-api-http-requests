@@ -156,7 +156,7 @@ final class EventDispatcher {
                     //And finally if it has the Event annotation, cache that method
                     EventMethod annotation = method.getAnnotation(EventMethod.class);
                     if (annotation != null) {
-                        getCache().put(toClass, annotation.value(), method);
+                        getCache().put(to.getClass(), annotation.value(), method);
                     }
                 }
             }
