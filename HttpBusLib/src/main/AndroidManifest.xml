@@ -1,0 +1,16 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.santiago.http_requests">
+
+    <application>
+
+        <provider
+            android:authorities="${applicationId}.InitializerContentProvider"
+            android:exported="false"
+            android:enabled="true"
+            android:name="com.santiago.init.InitializerContentProvider" />
+
+        <service android:enabled="true" android:name="com.santiago.http.http.HttpService" />
+
+    </application>
+
+</manifest>
