@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Class in charge of receiving events (from listeners), manage them and/or broadcast them to the other listeners.
  *
- * @note Thread-safe.
+ * <note> Thread-safe. </note>
  *
  * Created by saantiaguilera on 01/03/16.
  */
@@ -121,8 +121,8 @@ public class EventBus {
      * Method called (by one sending an event) for the purpose of managing that event, and/or else broadcast it to the
      * list of classes observing
      *
-     * @note Since we could be adding or rm observables from other threads, we create a copy of the current observables
-     * and iterate over them.
+     * <note> Since we could be adding or rm observables from other threads, we create a copy of the current observables
+     * and iterate over them. </note>
      *
      * @param event
      */
@@ -180,8 +180,8 @@ public class EventBus {
     /**
      * Dispatches an event as sticky but after a time has passed.
      *
-     * @Note it Will become sticky after the time has passed too. This wont create it as sticky
-     * at this moment and later dispatch it beware.
+     * <note> it Will become sticky after the time has passed too. This wont create it as sticky
+     * at this moment and later dispatch it beware. </note>
      *
      * @param event to dispatch
      * @param millisInFuture time in millis to wait for dispatching the event

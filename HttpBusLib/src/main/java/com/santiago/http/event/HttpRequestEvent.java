@@ -68,9 +68,9 @@ public abstract class HttpRequestEvent<E> extends Event {
      * method, change in the builder to your needs (the builder holds the default client data) and
      * return it.
      *
-     * @Note this will not override the default client used, so its just for this single request. if you plan
+     * <note>this will not override the default client used, so its just for this single request. if you plan
      * on doing a lot of requests with a particular modified client, then use the default or hold the dispatchers
-     * and stuff apart, inherit this class and modify them every time with the persisted pojos
+     * and stuff apart, inherit this class and modify them every time with the persisted pojos</note>
      *
      * @param builder of the default okhttpclient
      * @return okhttpclient to be used

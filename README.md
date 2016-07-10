@@ -1,4 +1,23 @@
-#OkHttp Request wrapper w events
+#OkHttp Request + Event Bus + Sugars! (Supports handling of configuration changes of activities without fragment shitty retaininstance or memmory kills)
+
+Im on jCenter/Maven !! :D 
+
+##How to get it
+In your project gradle make sure you have
+```Java
+allprojects {
+	repositories {
+		jcenter()
+	}
+}
+```
+
+In your application gradle add 
+```Java
+dependencies {
+  compile 'com.saantiaguilera:HttpBusLib:1.0.0'
+}
+```
 
 ##Networking
 
