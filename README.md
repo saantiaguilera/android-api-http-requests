@@ -1,8 +1,11 @@
 #OkHttp Request + Event Bus + Sugars! (Supports handling of configuration changes of activities without fragment shitty retaininstance or memmory kills)
 
 Simple OkHttp wrapper for easier networking operations (although you can use it as complex as you want, customizing your own dispatchers/cache/authenticators/interceptors/etc) + my own bus of events (because its way too old (a lot before EventBus was created)) and since I had always use it, I just keep updating it and using it for all my apps. Its really easy to swap it for the common event bus tho, so requests about it are welcome.
+
 Also it features asynchronous operations (everything about the okhttp things are done asynchronously in a threadpool + http requests are done in the threadpool provided by the okhttp dispatcher (which you can customize it as  you please if needed). 
+
 Parsing of the response is done async also, but the callback of success/failure is done in the main thread (to keep in mind)
+
 Events can be either in the main thread or async, you can choose about it. Later its explained how events work.
 
 This library also helps with some of the usual problems android devs face every day, like configuration changes of activities. Http responses can survive over a configuration change, since we are running over a bus + service. So you can always dispatch events to the bus and the new recreated activity, if listening to the bus, will still receive the response.
