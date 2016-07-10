@@ -23,7 +23,7 @@ allprojects {
 In your application gradle add 
 ```Java
 dependencies {
-  compile 'com.saantiaguilera:HttpBusLib:1.0.0'
+  compile 'com.saantiaguilera:HttpBusLib:1.0.1'
 }
 ```
 
