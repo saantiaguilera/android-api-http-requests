@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 final class EventCache {
 
     //Loop time for cleaning our map of lru items
-    private static final int LRU_DELAYED_TIME_FOR_PROCESS = 1_200_000; // Default: 20 minutes
+    private static final int LRU_DELAYED_TIME_FOR_PROCESS = 300_000; // Default: 5 minutes
     //Handler that will post messages to a handler thread for the lru clean up
     private final @NonNull Handler mHandler;
 
