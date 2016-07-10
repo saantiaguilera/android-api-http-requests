@@ -9,13 +9,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.santi.testing.R;
-import com.santiago.event.EventBus;
 import com.santiago.event.anotation.EventMethod;
 import com.santi.testing.event.DelayedHttpRequestEvent;
 import com.santi.testing.event.FailureEvent;
 import com.santi.testing.event.GetHttpRequestEvent;
 import com.santi.testing.event.PostHttpRequestEvent;
 import com.santi.testing.event.SuccessEvent;
+import com.santiago.loader.HttpBus;
 
 /**
  * Testing purposes
@@ -52,25 +52,25 @@ public class MActivity extends Activity {
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getHttpBus().dispatchEvent(new GetHttpRequestEvent());
+                HttpBus.getInstance().dispatchEvent(new GetHttpRequestEvent());
             }
         });
 
         delayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getHttpBus().dispatchEvent(new DelayedHttpRequestEvent());
+                HttpBus.getInstance().dispatchEvent(new DelayedHttpRequestEvent());
             }
         });
 
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getHttpBus().dispatchEvent(new PostHttpRequestEvent());
+                HttpBus.getInstance().dispatchEvent(new PostHttpRequestEvent());
             }
         });
 
-        EventBus.getHttpBus().addObservable(this);
+        HttpBus.getInstance().addObservable(this);
     }
 
 

@@ -7,7 +7,7 @@
             android:authorities="${applicationId}.InitializerContentProvider"
             android:exported="false"
             android:enabled="true"
-            android:name="com.santiago.init.InitializerContentProvider" />
+            android:name="com.santiago.loader.InitializerContentProvider" />
 
         <service android:enabled="true" android:name="com.santiago.http.http.HttpService" />
 

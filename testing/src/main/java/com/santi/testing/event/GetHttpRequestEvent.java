@@ -7,6 +7,7 @@ import com.santiago.event.EventBus;
 import com.santiago.http.event.HttpRequestEvent;
 import com.santiago.http.http.HttpMethod;
 import com.santiago.http.http.HttpParseException;
+import com.santiago.loader.HttpBus;
 
 import java.io.IOException;
 
@@ -54,12 +55,12 @@ public class GetHttpRequestEvent extends HttpRequestEvent<String> {
 
     @Override
     public void onHttpRequestFailure(@NonNull Exception exception) {
-        EventBus.getHttpBus().dispatchEvent(new FailureEvent(exception));
+        HttpBus.getInstance().dispatchEvent(new FailureEvent(exception));
     }
 
     @Override
     public void onHttpRequestSuccess(String result) {
-        EventBus.getHttpBus().dispatchEvent(new SuccessEvent(result));
+        HttpBus.getInstance().dispatchEvent(new SuccessEvent(result));
     }
 
 }

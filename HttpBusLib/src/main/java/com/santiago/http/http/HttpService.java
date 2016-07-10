@@ -23,6 +23,7 @@ import com.santiago.http.event.HttpInterceptorEvent;
 import com.santiago.http.event.HttpRequestEvent;
 import com.santiago.http.event.HttpStickyHeadersEvent;
 import com.santiago.http.event.HttpTimeoutsEvent;
+import com.santiago.loader.HttpBus;
 
 import java.io.IOException;
 import java.util.Map;
@@ -63,8 +64,8 @@ public class HttpService extends Service {
     public void onCreate() {
         super.onCreate();
         //Avoid duplicates
-        EventBus.getHttpBus().removeObservable(this);
-        EventBus.getHttpBus().addObservable(this);
+        HttpBus.getInstance().removeObservable(this);
+        HttpBus.getInstance().addObservable(this);
     }
 
     /**

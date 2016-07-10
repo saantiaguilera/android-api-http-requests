@@ -2,14 +2,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: "com.jfrog.bintray"
 
-version = "1.0.1"
+version = "1.0.3"
 
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        minSdkVersion 7
+        minSdkVersion 9
         targetSdkVersion 24
         versionCode 1
         versionName version
@@ -28,11 +28,19 @@ configurations {
 
 dependencies {
     compile fileTree(dir: 'libs')
-    compile 'com.android.support:appcompat-v7:24.0.0'
     compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    compile "com.saantiaguilera:EventsLib:$eventLibVersion"
 
     compile 'com.android.support:support-annotations:24.0.0'
     javadocDeps 'com.android.support:support-annotations:24.0.0'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        //Since bintray hasnt already publish it
+        url  "http://dl.bintray.com/saantiaguilera/maven"
+    }
 }
 
 def siteUrl = 'https://github.com/saantiaguilera/android-api-http-requests'
