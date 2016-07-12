@@ -72,7 +72,7 @@ public class GetRequestEvent extends RequestEvent<String> {
 
     @Nullable
     @Override
-    //This is optional. You can override this if you need it (unless its mandatory like in a POST)
+    //This is optional. You can override this if you need it
     public RequestBody getBody() {
         return null;
     }
