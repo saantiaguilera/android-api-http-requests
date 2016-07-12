@@ -72,11 +72,6 @@ public class HttpService extends Service {
     /**
      * Using START_STICKY because we want it to live forever
      * (WHO WANTS TO LIVE FOREVER?)
-     *
-     * @param intent
-     * @param flags
-     * @param startId
-     * @return
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -86,7 +81,7 @@ public class HttpService extends Service {
     /**
      * Return a HttpBinder instance so that they can know our instance running :)
      *
-     * @param intent
+     * @param intent intent from the start
      * @return HttpBinder instance
      */
     @Nullable
@@ -97,7 +92,7 @@ public class HttpService extends Service {
 
     /**
      * Async method from where the requests are done
-     * @param event
+     * @param event the request event
      */
     @SuppressWarnings({"unused", "unchecked"})
     @RequiresPermission(Manifest.permission.INTERNET)
@@ -213,7 +208,7 @@ public class HttpService extends Service {
 
     /**
      * Cancel a pending request if exists
-     * @param event
+     * @param event the cancel event
      */
     @SuppressWarnings("unused")
     @EventAsync
@@ -242,7 +237,7 @@ public class HttpService extends Service {
 
     /**
      * Checks that the body isnt null, else notifies
-     * @param body
+     * @param body body of a request
      */
     private @NonNull RequestBody validateBodyNonNull(@Nullable RequestBody body) {
         if (body == null) {

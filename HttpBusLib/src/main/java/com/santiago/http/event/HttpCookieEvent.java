@@ -7,6 +7,7 @@ import com.santiago.event.Event;
 import okhttp3.CookieJar;
 
 /**
+ * COOOOKIEEEES
  * Created by saantiaguilera on 06/07/16.
  */
 public class HttpCookieEvent extends Event {

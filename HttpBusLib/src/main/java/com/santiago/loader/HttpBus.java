@@ -8,6 +8,7 @@ import com.santiago.event.EventBus;
 import com.santiago.http.http.HttpService;
 
 /**
+ * Bus for Http requests
  * Created by santi on 10/07/16.
  */
 public final class HttpBus {
@@ -18,7 +19,7 @@ public final class HttpBus {
      * This shouldnt be called by anyone except us on the start of the app
      * Ideally try to call it in the application onCreate. So the context is the applicationContext :)
      *
-     * @param context
+     * @param context context for starting the service.
      * @return bus
      */
     static @NonNull EventBus _initHttpBus(@NonNull Context context) {

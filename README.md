@@ -29,14 +29,7 @@ allprojects {
 In your application gradle add 
 ```Java
 dependencies {
-  compile 'com.saantiaguilera:HttpBusLib:1.0.3'
-}
-```
-
-Be sure you have in your application gradle
-```Java
-repositories {
-	mavenCentral()	
+  compile 'com.saantiaguilera:HttpBusLib:1.0.4'
 }
 ```
 

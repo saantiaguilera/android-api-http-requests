@@ -10,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 /**
+ * Content provider for initializing singletons
+ *
  * Created by santi on 10/07/16.
  */
 public class InitializerContentProvider extends ContentProvider {

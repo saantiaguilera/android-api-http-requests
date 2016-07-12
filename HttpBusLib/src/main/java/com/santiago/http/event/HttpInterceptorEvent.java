@@ -7,6 +7,7 @@ import com.santiago.event.Event;
 import okhttp3.Interceptor;
 
 /**
+ * Event for adding interceptors
  * Created by saantiaguilera on 06/07/16.
  */
 public class HttpInterceptorEvent extends Event {

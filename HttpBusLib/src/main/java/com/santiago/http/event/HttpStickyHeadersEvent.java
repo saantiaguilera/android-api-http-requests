@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * For having sticky headers (headers that will apply to all requests)
  * Created by saantiaguilera on 06/07/16.
  */
 public class HttpStickyHeadersEvent extends Event {

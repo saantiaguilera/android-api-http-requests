@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.santiago.event.Event;
 
 /**
+ * Event for cancelling a particular request
  * Created by saantiaguilera on 07/07/16.
  */
 public class HttpCancelRequestEvent extends Event {
