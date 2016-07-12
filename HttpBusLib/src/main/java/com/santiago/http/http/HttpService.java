@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
+import android.util.Log;
 
 import com.santiago.event.EventBus;
 import com.santiago.event.anotation.EventAsync;
@@ -48,7 +49,7 @@ import okhttp3.Response;
 public class HttpService extends Service {
 
     //Rest client. Mutable
-    private @NonNull OkHttpClient restClient = new OkHttpClient();
+    private volatile @NonNull OkHttpClient restClient = new OkHttpClient();
     //Those headers that should always appear
     private final @NonNull Map<String, String> stickyHeaders = new ConcurrentHashMap<>();
     //Map for storing the pending requests (So we can cancel them if needed)
@@ -117,16 +118,13 @@ public class HttpService extends Service {
                 else request.delete(body);
                 break;
             case POST:
-                validateBodyNonNull(body);
-                request.post(event.getBody());
+                request.post(validateBodyNonNull(body));
                 break;
             case PUT:
-                validateBodyNonNull(body);
-                request.put(event.getBody());
+                request.put(validateBodyNonNull(body));
                 break;
             case PATCH:
-                validateBodyNonNull(body);
-                request.patch(event.getBody());
+                request.patch(validateBodyNonNull(body));
                 break;
             case HEAD:
                 request.head();
@@ -246,8 +244,13 @@ public class HttpService extends Service {
      * Checks that the body isnt null, else notifies
      * @param body
      */
-    private void validateBodyNonNull(@Nullable RequestBody body) {
-        if (body == null) throw new NullPointerException("A request about to execute needs a body and its null. Please check :)");
+    private @NonNull RequestBody validateBodyNonNull(@Nullable RequestBody body) {
+        if (body == null) {
+            Log.w(HttpService.class.getSimpleName(), "Theres a request without body that should have it. Performing request with empty body.");
+            return RequestBody.create(null, new byte[0]);
+        }
+
+        return body;
     }
 
     /*---------------CONFIGS---------------*/
