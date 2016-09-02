@@ -120,6 +120,7 @@ You can configure the Http client as much as you like (although I didnt do all o
 You can for example add an interceptor by creating an event of HttpInterceptorEvent.
 
 The features available are:
+- A whole new OkHttpClient
 - Authenticator
 - Cache
 - Cancel a request
