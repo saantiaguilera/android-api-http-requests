@@ -18,6 +18,7 @@ import com.santiago.http.event.HttpAuthenticatorEvent;
 import com.santiago.http.event.HttpCacheEvent;
 import com.santiago.http.event.HttpCancelAllRequestsEvent;
 import com.santiago.http.event.HttpCancelRequestEvent;
+import com.santiago.http.event.HttpClientEvent;
 import com.santiago.http.event.HttpCookieEvent;
 import com.santiago.http.event.HttpDispatcherEvent;
 import com.santiago.http.event.HttpInterceptorEvent;
@@ -328,6 +329,15 @@ public class HttpService extends Service {
     private void newAuthenticatorEvent(@NonNull HttpAuthenticatorEvent event) {
         synchronized (lock) {
             restClient = restClient.newBuilder().authenticator(event.getAuthenticator()).build();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @EventAsync
+    @EventMethod(HttpClientEvent.class)
+    private void newClientEvent(@NonNull HttpClientEvent event) {
+        synchronized (lock) {
+            restClient = event.getOkHttpClient();
         }
     }
 
